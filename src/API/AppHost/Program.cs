@@ -1,18 +1,14 @@
-using AppHost.Extensions;
+using SharedFramework;
+using Users.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApiServices();
-builder.Services.AddControllers();
+builder.Services.AddUsersModule();
+builder.Services.AddSharedFramework(builder.Configuration);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApiServices();
-}
-
-app.UseHttpsRedirection();
-app.MapControllers();
+app.UseUsersModule();
+app.UseSharedFramework();
 
 app.Run();

@@ -1,4 +1,7 @@
-namespace AppHost.Extensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace SharedFramework.OpenAPI;
 
 public static class OpenApiExtensions
 {
@@ -9,12 +12,12 @@ public static class OpenApiExtensions
         return services;
     }
 
-    public static IApplicationBuilder MapOpenApiServices(this IApplicationBuilder app)
+    public static IApplicationBuilder UseOpenApiServices(this IApplicationBuilder app)
     {
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
             c.RoutePrefix = string.Empty;
         });
 

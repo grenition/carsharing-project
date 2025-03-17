@@ -10,6 +10,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppHost", "src\API\AppHost\AppHost.csproj", "{91EE04A2-2B1A-47AD-AA17-F4E9E090374A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.API", "src\Modules\Users\Users.API\Users.API.csproj", "{45AB51F3-E0C6-4826-BE74-D2BA9154BC8E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CF058C59-3C40-47E9-B4B2-F8A727C816E6} = {CF058C59-3C40-47E9-B4B2-F8A727C816E6}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.Application", "src\Modules\Users\Users.Application\Users.Application.csproj", "{CF058C59-3C40-47E9-B4B2-F8A727C816E6}"
 EndProject

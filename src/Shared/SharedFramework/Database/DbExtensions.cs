@@ -21,4 +21,16 @@ public static class DbExtensions
 
         return services;
     }
+
+    public static DbContextOptionsBuilder AddPostgres(this DbContextOptionsBuilder optionsBuilder)
+    {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory()) 
+            .AddJsonFile("appsettings.json", optional: true)
+            .Build();
+
+        var connectionString = configuration.GetConnectionString("Postgres");
+
+        return optionsBuilder.UseNpgsql(connectionString);
+    }
 }
