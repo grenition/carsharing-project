@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SharedFramework.Credentials;
 using SharedFramework.Database;
 using SharedFramework.Exceptions;
 using SharedFramework.OpenAPI;
@@ -17,6 +18,7 @@ public static class SharedFrameowrkExtensions
         services.AddOpenApiServices();
         services.AddDataProtection();
         services.AddErrorHandling();
+        services.AddEnvCredentialsProvider();
         
         return services;
     }
