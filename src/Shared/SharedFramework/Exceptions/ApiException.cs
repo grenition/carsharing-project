@@ -6,7 +6,7 @@ public class ApiException : Exception
 {
     public virtual HttpStatusCode StatusCode => HttpStatusCode.BadRequest;
     
-    protected ApiException() : base()
+    protected ApiException() : base(string.Empty)
     {
     }
     protected ApiException(string? message) : base(message)

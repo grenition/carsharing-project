@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using Users.Application.Services;
 using Users.Application.Services.Abstract;
-using Users.Application.Services.Implementations;
 
 namespace Users.Application.Extensions;
 
@@ -10,6 +10,7 @@ public static class UsersApplicationExtensions
     {
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IRegistrationService, RegistrationService>();
+        services.AddScoped<IUsernameService, UsernameService>();
         
         return services;
     }

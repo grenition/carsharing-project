@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Users.Application.DTO;
+using Users.Application.DTO.Requests;
 using Users.Application.Services.Abstract;
 
 namespace Users.API.Controllers;
@@ -11,23 +11,21 @@ public class AuthController(
     IRegistrationService registrationService) : ControllerBase
 {
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] UserAuthDto userAuthDto)
+    public async Task<IActionResult> Login([FromBody] UserAuthRequest userAuthRequest)
     {
-        return Ok(await authService.AuthenticateAsync(userAuthDto));
+        return Ok(await authService.AuthenticateAsync(userAuthRequest));
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] UserRegisterDto userRegisterDto)
+    public async Task<IActionResult> Register([FromBody] UserRegisterRequest userRegisterRequest)
     {
-        await registrationService.RegisterAsync(userRegisterDto);
-        return Ok();
+        return Ok(await registrationService.RegisterAsync(userRegisterRequest));
     }
 
-    [HttpPost("confitmRegistration")]
-    public async Task<IActionResult> ConfirmRegistration([FromBody] UserConfirmRegistrationDto registrationDto)
+    [HttpPost("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail([FromBody] UserConfirmRegistrationRequest registrationRequest)
     {
-        await registrationService.ConfirmRegistration(registrationDto);
-        return Ok();
+        return Ok(await registrationService.ConfirmEmail(registrationRequest));
     }
     
 }

@@ -34,13 +34,14 @@ public class ErrorHandlerMiddleware : IMiddleware
     {
         var errorResponse = exception switch
         {
-            ApiException ex => new ExceptionResponse(new ErrorsResponse(new Error(GetErrorCode(ex), ex.Message))
-                , ex.StatusCode),
-            _ => new ExceptionResponse(new ErrorsResponse(new Error("error", "There was an error.")),
-                HttpStatusCode.InternalServerError)
+            ApiException ex => new ExceptionResponse(
+                new ErrorsResponse(new Error(GetErrorCode(ex), ex.Message)), ex.StatusCode),
+            _ => new ExceptionResponse(new ErrorsResponse(
+                    new Error("error", "There was an internal error.")), HttpStatusCode.InternalServerError)
         };
         
         context.Response.StatusCode = (int)(errorResponse?.StatusCode ?? HttpStatusCode.InternalServerError);
+        
         var responce = errorResponse?.Response;
         if (responce is null)
             return;
