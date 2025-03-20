@@ -5,6 +5,6 @@ namespace Users.Application.Services.Abstract;
 
 public interface IRegistrationService
 {
-    Task<UserRegisterResponse> RegisterAsync(UserRegisterRequest registerRequest);
+    Task<UserRegisterResponse> Register(UserRegisterRequest registerRequest);
     Task<UserRegisterResponse> ConfirmEmail(UserConfirmRegistrationRequest resetPasswordRequest);
 }

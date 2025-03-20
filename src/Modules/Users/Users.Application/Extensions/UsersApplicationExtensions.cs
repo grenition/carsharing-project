@@ -1,4 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using Users.Application.Factories;
+using Users.Application.Factories.Abstract;
 using Users.Application.Services;
 using Users.Application.Services.Abstract;
 
@@ -8,9 +10,9 @@ public static class UsersApplicationExtensions
 {
     public static IServiceCollection AddUsersApplication(this IServiceCollection services)
     {
-        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IRegistrationService, RegistrationService>();
-        services.AddScoped<IUsernameService, UsernameService>();
+        services.AddScoped<IUsernameFactory, UsernameFactory>();
         
         return services;
     }

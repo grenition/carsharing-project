@@ -3,6 +3,7 @@ using SharedFramework.Extensions;
 using Users.Application.DTO.Requests;
 using Users.Application.DTO.Responses;
 using Users.Application.Exception;
+using Users.Application.Factories.Abstract;
 using Users.Application.Services.Abstract;
 using Users.Domain.Models;
 
@@ -12,19 +13,19 @@ public class RegistrationService : IRegistrationService
 {
     private readonly UserManager<UserModel> _userManager;
     private readonly IEmailService _emailService;
-    private readonly IUsernameService _usernameService;
+    private readonly IUsernameFactory _usernameFactory;
 
     public RegistrationService(
         UserManager<UserModel> userManager,
         IEmailService emailService,
-        IUsernameService usernameService)
+        IUsernameFactory usernameFactory)
     {
         _userManager = userManager;
         _emailService = emailService;
-        _usernameService = usernameService;
+        _usernameFactory = usernameFactory;
     }
     
-    public async Task<UserRegisterResponse> RegisterAsync(UserRegisterRequest registerRequest)
+    public async Task<UserRegisterResponse> Register(UserRegisterRequest registerRequest)
     {
         var existingUser = await _userManager.FindByEmailAsync(registerRequest.Email!);
         if (existingUser != null)
@@ -35,7 +36,7 @@ public class RegistrationService : IRegistrationService
         
         var user = new UserModel()
         {
-            UserName = await _usernameService.GenerateUniqueUsername(),
+            UserName = await _usernameFactory.GenerateUniqueUsername(),
             Email = registerRequest.Email
         };
         
@@ -47,7 +48,7 @@ public class RegistrationService : IRegistrationService
         }
 
         var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        await _emailService.SendVerificationEmailAsync(registerRequest.Email!, emailConfirmationToken);
+        await _emailService.SendVerificationEmail(registerRequest.Email!, emailConfirmationToken);
 
         return new UserRegisterResponse("User successfully registered. Verification code sended to email.", user.UserName);
     }

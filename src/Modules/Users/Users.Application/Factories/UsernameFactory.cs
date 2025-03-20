@@ -1,21 +1,18 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Users.Application.Services.Abstract;
+using Users.Application.Factories.Abstract;
 using Users.Domain.Models;
 
-namespace Users.Application.Services;
+namespace Users.Application.Factories;
 
-public class UsernameService : IUsernameService
+public class UsernameFactory : IUsernameFactory
 {
     private readonly UserManager<UserModel> _userManager;
 
-    public UsernameService(UserManager<UserModel> userManager)
+    public UsernameFactory(UserManager<UserModel> userManager)
     {
         _userManager = userManager;
     }
-
-    public async Task<bool> IsUsernameTaken(string username) =>
-        await _userManager.FindByNameAsync(username) != null;
     
     public async Task<string> GenerateUniqueUsername()
     {
@@ -27,7 +24,7 @@ public class UsernameService : IUsernameService
             username = $"user{userCount + 1}";
             userCount++;
         }
-        while (await IsUsernameTaken(username));
+        while (await _userManager.FindByNameAsync(username) != null);
 
         return username;
     }
