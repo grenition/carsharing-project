@@ -7,19 +7,19 @@ namespace Users.API.Controllers;
 [Route("api/auth")]
 [ApiController]
 public class AuthController(
-    IAuthService authService,
+    IAuthenticationService authenticationService,
     IRegistrationService registrationService) : ControllerBase
 {
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserAuthRequest userAuthRequest)
     {
-        return Ok(await authService.AuthenticateAsync(userAuthRequest));
+        return Ok(await authenticationService.AuthenticateAsync(userAuthRequest));
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserRegisterRequest userRegisterRequest)
     {
-        return Ok(await registrationService.RegisterAsync(userRegisterRequest));
+        return Ok(await registrationService.Register(userRegisterRequest));
     }
 
     [HttpPost("confirm-email")]
