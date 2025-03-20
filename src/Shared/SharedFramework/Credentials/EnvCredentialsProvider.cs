@@ -7,7 +7,10 @@ public class EnvCredentialsProvider : ICredentialsProvider
 {
     private static readonly Dictionary<CredentialType, string> EnvMap = new()
     {
-        { CredentialType.JwtKey, "JWT_KEY" }
+        { CredentialType.JwtKey, "JWT_KEY" },
+        { CredentialType.TwoFactorKey, "TWO_FA_KEY" },
+        { CredentialType.SmtpUserAddress, "SMTP_USER_ADDRESS" },
+        { CredentialType.SmtpUserPassword, "SMTP_USER_PASSWORD" }
     };
     
     public EnvCredentialsProvider(string envFilePath)

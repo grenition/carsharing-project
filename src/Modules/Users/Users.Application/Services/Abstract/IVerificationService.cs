@@ -1,6 +1,6 @@
 namespace Users.Application.Services.Abstract;
 
-public interface IEmailService
+public interface IVerificationService
 {
     Task SendVerificationEmail(string to, string token);
     Task SendPasswordResetEmail(string to, string token);

@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SharedFramework.Application;
 using SharedFramework.Authentication;
 using SharedFramework.Credentials;
 using SharedFramework.Database;
+using SharedFramework.Email;
 using SharedFramework.Exceptions;
 using SharedFramework.OpenAPI;
 
@@ -20,7 +22,9 @@ public static class SharedFrameowrkExtensions
         services.AddDataProtection();
         services.AddErrorHandling();
         services.AddEnvCredentialsProvider(out ICredentialsProvider credentialsProvider);
-        services.AddJwtBearerAuthentication(configuration, credentialsProvider);
+        services.AddBearerAuthentication(configuration, credentialsProvider);
+        services.AddApplicationServices(configuration);
+        services.AddEmailServices(configuration, credentialsProvider);
         
         return services;
     }

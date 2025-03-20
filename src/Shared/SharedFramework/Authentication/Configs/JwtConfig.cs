@@ -1,4 +1,4 @@
-namespace SharedFramework.Authentication.Jwt;
+namespace SharedFramework.Authentication.Configs;
 
 public class JwtConfig
 {

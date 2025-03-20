@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SharedFramework.Data.DTO;
 using SharedFramework.Data.DTO.DataTypes;
 using Users.Application.Services.Abstract;
 

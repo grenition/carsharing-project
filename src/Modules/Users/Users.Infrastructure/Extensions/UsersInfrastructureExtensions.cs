@@ -23,7 +23,7 @@ public static class UsersInfrastructureExtensions
         
         services.AddScoped<ITokenFactory, JwtTokenFactory>();
 
-        services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IVerificationService, VerificationService>();
         services.AddScoped<ITwoFactorTokenService, TwoFactorTokenService>();
         
         return services;

@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SharedFramework.Authentication.Jwt;
+using SharedFramework.Authentication.Configs;
 using Users.Application.Factories.Abstract;
 using Users.Domain.Models;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;

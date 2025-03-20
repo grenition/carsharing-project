@@ -27,5 +27,4 @@ public class UsersAuthController(
     {
         return Ok(await registrationService.ConfirmEmail(registrationRequest));
     }
-    
 }

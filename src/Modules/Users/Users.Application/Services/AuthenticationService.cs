@@ -11,18 +11,18 @@ namespace Users.Application.Services;
 public class AuthenticationService : IAuthenticationService
 {
     private readonly ITokenFactory _tokenFactory;
-    private readonly IEmailService _emailService;
+    private readonly IVerificationService _verificationService;
     private readonly UserManager<UserModel> _userManager;
     private readonly ITwoFactorTokenService _twoFactorTokenService;
 
     public AuthenticationService(
         ITokenFactory tokenFactory,
-        IEmailService emailService,
+        IVerificationService verificationService,
         UserManager<UserModel> userManager,
         ITwoFactorTokenService twoFactorTokenService)
     {
         _tokenFactory = tokenFactory;
-        _emailService = emailService;
+        _verificationService = verificationService;
         _userManager = userManager;
         _twoFactorTokenService = twoFactorTokenService;
     }
@@ -40,7 +40,7 @@ public class AuthenticationService : IAuthenticationService
         if (user.TwoFactorEnabled)
         {
             var twoFactorCode = await _twoFactorTokenService.GenerateTwoFactorCode();
-            await _emailService.SendTwoFactorCode(user.Email!, twoFactorCode);
+            await _verificationService.SendTwoFactorCode(user.Email!, twoFactorCode);
 
             return new UserAuthResponse(
                 userId: user.Id,

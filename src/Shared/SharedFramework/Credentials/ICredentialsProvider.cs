@@ -2,7 +2,10 @@ namespace SharedFramework.Credentials;
 
 public enum CredentialType
 {
-    JwtKey
+    JwtKey,
+    TwoFactorKey,
+    SmtpUserAddress,
+    SmtpUserPassword
 }
 
 public interface ICredentialsProvider

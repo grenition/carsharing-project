@@ -12,16 +12,16 @@ namespace Users.Application.Services;
 public class RegistrationService : IRegistrationService
 {
     private readonly UserManager<UserModel> _userManager;
-    private readonly IEmailService _emailService;
+    private readonly IVerificationService _verificationService;
     private readonly IUsernameFactory _usernameFactory;
 
     public RegistrationService(
         UserManager<UserModel> userManager,
-        IEmailService emailService,
+        IVerificationService verificationService,
         IUsernameFactory usernameFactory)
     {
         _userManager = userManager;
-        _emailService = emailService;
+        _verificationService = verificationService;
         _usernameFactory = usernameFactory;
     }
     
@@ -48,7 +48,7 @@ public class RegistrationService : IRegistrationService
         }
 
         var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        await _emailService.SendVerificationEmail(registerRequest.Email!, emailConfirmationToken);
+        await _verificationService.SendVerificationEmail(registerRequest.Email!, emailConfirmationToken);
 
         return new UserResponse(user.Id, "User successfully registered. Verification code sended to email.");
     }
