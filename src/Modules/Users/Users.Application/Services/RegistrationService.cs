@@ -25,7 +25,7 @@ public class RegistrationService : IRegistrationService
         _usernameFactory = usernameFactory;
     }
     
-    public async Task<UserRegisterResponse> Register(UserRegisterRequest registerRequest)
+    public async Task<UserResponse> Register(UserRegisterRequest registerRequest)
     {
         var existingUser = await _userManager.FindByEmailAsync(registerRequest.Email!);
         if (existingUser != null)
@@ -50,10 +50,10 @@ public class RegistrationService : IRegistrationService
         var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         await _emailService.SendVerificationEmail(registerRequest.Email!, emailConfirmationToken);
 
-        return new UserRegisterResponse("User successfully registered. Verification code sended to email.", user.UserName);
+        return new UserResponse(user.Id, "User successfully registered. Verification code sended to email.");
     }
     
-    public async Task<UserRegisterResponse> ConfirmEmail(UserConfirmRegistrationRequest resetPasswordRequest)
+    public async Task<UserResponse> ConfirmEmail(UserConfirmRegistrationRequest resetPasswordRequest)
     {
         var user = await _userManager.FindByEmailAsync(resetPasswordRequest.Email!);
         if (user == null)
@@ -63,6 +63,6 @@ public class RegistrationService : IRegistrationService
         if (!confirmResult.Succeeded)
             throw new EmailConfirmationFailureException(string.Join("; ", confirmResult.Errors.Select(e => e.Description)));
         
-        return new UserRegisterResponse("User email successfully confirmed.", user.UserName!);
+        return new UserResponse(user.Id, "User email successfully confirmed.");
     }
 }

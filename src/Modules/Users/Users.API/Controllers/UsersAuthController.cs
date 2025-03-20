@@ -4,9 +4,9 @@ using Users.Application.Services.Abstract;
 
 namespace Users.API.Controllers;
 
-[Route("api/auth")]
+[Route("api/users/auth")]
 [ApiController]
-public class AuthController(
+public class UsersAuthController(
     IAuthenticationService authenticationService,
     IRegistrationService registrationService) : ControllerBase
 {

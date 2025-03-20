@@ -4,5 +4,5 @@ public interface IEmailService
 {
     Task SendVerificationEmail(string to, string token);
     Task SendPasswordResetEmail(string to, string token);
-    Task SendTwoFactorCode(string to, string code);
+    Task SendTwoFactorCode(string to, string token);
 }

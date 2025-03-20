@@ -4,8 +4,12 @@ namespace SharedFramework.Credentials;
 
 public static class CredentialsExtensions
 {
-    public static IServiceCollection AddEnvCredentialsProvider(this IServiceCollection services, string path = ".env")
+    public static IServiceCollection AddEnvCredentialsProvider(
+        this IServiceCollection services,
+        out ICredentialsProvider credentialsProvider,
+        string path = ".env")
     {
-        return services.AddSingleton<ICredentialsProvider>(_ => new EnvCredentialsProvider(path));
+        credentialsProvider = new EnvCredentialsProvider(path);
+        return services.AddSingleton(credentialsProvider);
     }
 }

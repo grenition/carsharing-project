@@ -8,12 +8,12 @@ public class EmailService : IEmailService
     {
         Console.WriteLine("Confirmation token: " + token);
     }
-    public Task SendPasswordResetEmail(string to, string token)
+    public async Task SendPasswordResetEmail(string to, string token)
     {
-        throw new NotImplementedException();
+        Console.WriteLine("Password reset token: " + token);
     }
-    public Task SendTwoFactorCode(string to, string code)
+    public async Task SendTwoFactorCode(string to, string token)
     {
-        throw new NotImplementedException();
+        Console.WriteLine("Two factor code: " + token);
     }
 }

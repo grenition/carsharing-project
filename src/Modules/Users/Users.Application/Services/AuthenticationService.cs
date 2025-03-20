@@ -43,7 +43,7 @@ public class AuthenticationService : IAuthenticationService
             await _emailService.SendTwoFactorCode(user.Email!, twoFactorCode);
 
             return new UserAuthResponse(
-                userName: user.UserName!,
+                userId: user.Id,
                 token: null!,
                 requires2fa: true,
                 message: "Two-factor authentication required. A verification code has been sent to email.");
@@ -51,13 +51,26 @@ public class AuthenticationService : IAuthenticationService
 
         var token = await _tokenFactory.GenerateAuthToken(user);
         return new UserAuthResponse(
-            userName: user.UserName!,
+            userId: user.Id,
             token: token,
             requires2fa: false,
             message: "Authenticated successfully.");
     }
-    public Task<UserAuthResponse> AuthenticateTwoFactor(UserAuthTwoFactorRequest authTwoFactorRequest)
+    
+    public async Task<UserAuthResponse> AuthenticateTwoFactor(UserAuthTwoFactorRequest authTwoFactorRequest)
     {
-        throw new NotImplementedException();
+        var user = await _userManager.FindByEmailAsync(authTwoFactorRequest.Email!);
+        if (user == null)
+            throw new UserNotFoundException();
+
+        if (!await _twoFactorTokenService.IsValidToken(authTwoFactorRequest.Token!))
+            throw new InvalidTokenException("Two factor code is invalid.");
+        
+        var token = await _tokenFactory.GenerateAuthToken(user);
+        return new UserAuthResponse(
+            userId: user.Id,
+            token: token,
+            requires2fa: false,
+            message: "Authenticated successfully.");
     }
 }

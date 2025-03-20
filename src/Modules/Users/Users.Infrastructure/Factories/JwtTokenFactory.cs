@@ -1,9 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SharedFramework.Credentials;
+using SharedFramework.Authentication.Jwt;
 using Users.Application.Factories.Abstract;
 using Users.Domain.Models;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -12,25 +12,21 @@ namespace Users.Infrastructure.Factories;
 
 public class JwtTokenFactory : ITokenFactory
 {
-    private readonly IConfiguration _configuration;
-    private readonly ICredentialsProvider _credentialsProvider;
+    private readonly IOptions<JwtConfig> _jwtConfig;
 
-    public JwtTokenFactory(
-        IConfiguration configuration,
-        ICredentialsProvider credentialsProvider)
+    public JwtTokenFactory(IOptions<JwtConfig> jwtConfig)
     {
-        _configuration = configuration;
-        _credentialsProvider = credentialsProvider;
+        _jwtConfig = jwtConfig;
     }
 
-    public async Task<string> GenerateAuthToken(UserModel userModel)
+    public Task<string> GenerateAuthToken(UserModel userModel)
     {
-        var jwtKey = await _credentialsProvider.GetAsync(CredentialType.JwtKey);
-        var jwtIssuer = _configuration["Jwt:Issuer"];
-        var jwtAudience = _configuration["Jwt:Audience"];
-        var expirationMinutes = _configuration.GetValue<int>("Jwt:ExpirationMinutes");
+        var jwtKey = _jwtConfig.Value.Secret;
+        var jwtIssuer = _jwtConfig.Value.ValidIssuer;
+        var jwtAudience = _jwtConfig.Value.ValidAudience;
+        var expirationMinutes = _jwtConfig.Value.TokenExpirationMinutes;
 
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
         
         var claims = new[]
@@ -49,6 +45,6 @@ public class JwtTokenFactory : ITokenFactory
         );
 
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-        return tokenString;
+        return Task.FromResult(tokenString);
     }
 }

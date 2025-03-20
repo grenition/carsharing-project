@@ -10,9 +10,11 @@ public static class UsersApplicationExtensions
 {
     public static IServiceCollection AddUsersApplication(this IServiceCollection services)
     {
+        services.AddScoped<IUsernameFactory, UsernameFactory>();
+        
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IRegistrationService, RegistrationService>();
-        services.AddScoped<IUsernameFactory, UsernameFactory>();
+        services.AddScoped<ITwoFactorService, TwoFactorService>();
         
         return services;
     }
