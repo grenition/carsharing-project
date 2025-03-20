@@ -25,7 +25,6 @@ public class ErrorHandlerMiddleware : IMiddleware
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, exception.Message);
             await HandleErrorAsync(context, exception);
         }
     }
@@ -41,6 +40,9 @@ public class ErrorHandlerMiddleware : IMiddleware
         };
         
         context.Response.StatusCode = (int)(errorResponse?.StatusCode ?? HttpStatusCode.InternalServerError);
+        
+        if(context.Response.StatusCode == (int)HttpStatusCode.InternalServerError)
+            _logger.LogError(exception, exception.Message);
         
         var responce = errorResponse?.Response;
         if (responce is null)
