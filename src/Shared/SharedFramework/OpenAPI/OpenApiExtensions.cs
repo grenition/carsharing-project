@@ -14,6 +14,7 @@ public static class OpenApiExtensions
             option.SwaggerDoc("v1", new OpenApiInfo { Title = "F-API", Version = "v1" });
             option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
+                Type = SecuritySchemeType.Http,
                 In = ParameterLocation.Header,
                 Description = "Please enter a valid token.",
                 Name = "Authorization",

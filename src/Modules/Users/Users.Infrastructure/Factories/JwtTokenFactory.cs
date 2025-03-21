@@ -12,39 +12,39 @@ namespace Users.Infrastructure.Factories;
 
 public class JwtTokenFactory : ITokenFactory
 {
-    private readonly IOptions<JwtConfig> _jwtConfig;
+    private readonly JwtConfig _jwtConfig;
 
     public JwtTokenFactory(IOptions<JwtConfig> jwtConfig)
     {
-        _jwtConfig = jwtConfig;
+        _jwtConfig = jwtConfig.Value;
     }
 
     public Task<string> GenerateAuthToken(UserModel userModel)
     {
-        var jwtKey = _jwtConfig.Value.Secret;
-        var jwtIssuer = _jwtConfig.Value.ValidIssuer;
-        var jwtAudience = _jwtConfig.Value.ValidAudience;
-        var expirationMinutes = _jwtConfig.Value.TokenExpirationMinutes;
+        var keyBytes = Encoding.UTF8.GetBytes(_jwtConfig.Secret!);
+        var securityKey = new SymmetricSecurityKey(keyBytes);
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-        
-        var claims = new[]
+        var claimsIdentity = new ClaimsIdentity(new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, userModel.Id),
-            new Claim(JwtRegisteredClaimNames.Email, userModel.Email!),
+            new Claim(JwtRegisteredClaimNames.Email, userModel.Email ?? string.Empty),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        });
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = claimsIdentity,
+            Expires = DateTime.UtcNow.AddMinutes(_jwtConfig.TokenExpirationMinutes),
+            SigningCredentials = credentials,
+            Issuer = _jwtConfig.ValidIssuer,
+            Audience = _jwtConfig.ValidAudience
         };
 
-        var token = new JwtSecurityToken(
-            issuer: jwtIssuer,
-            audience: jwtAudience,
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(expirationMinutes),
-            signingCredentials: credentials
-        );
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+        var tokenString = tokenHandler.WriteToken(securityToken);
 
-        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
         return Task.FromResult(tokenString);
     }
 }

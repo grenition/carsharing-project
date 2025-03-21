@@ -16,7 +16,7 @@ namespace SharedFramework.Authentication
             IConfiguration configuration,
             ICredentialsProvider credentialsProvider)
         {
-            var twoFactorSecret = credentialsProvider.GetAsync(CredentialType.JwtKey).WaitResult();
+            var twoFactorSecret = credentialsProvider.GetAsync(CredentialType.TwoFactorKey).WaitResult();
             var twoFactorCodeLength = configuration.GetValue<int>("TwoFactor:CodeLength");
             var twoFactorExpirationMinutes = configuration.GetValue<int>("TwoFactor:ExpirationMinutes");
 
@@ -65,7 +65,9 @@ namespace SharedFramework.Authentication
                         ValidateIssuerSigningKey = true
                     };
                 });
-
+            
+            services.AddAuthorization();
+            
             return services;
         }
     }
