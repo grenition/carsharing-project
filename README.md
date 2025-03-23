@@ -58,3 +58,14 @@ SMTP_USER_PASSWORD=
 docker-compose up --build
 ```
 This will launch the API Gateway, modules, database, and other required services defined in docker-compose.yml.
+
+## Stack
+```
+ASP.NET Core
+Entity Framework Core
+Postgre SQL
+JWT Bearer
+SMTP / MailKit
+Docker and Docker Compose
+Swagger
+```
