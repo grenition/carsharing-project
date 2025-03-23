@@ -10,24 +10,21 @@ namespace Users.Application.Services;
 
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly ITokenFactory _tokenFactory;
-    private readonly IVerificationService _verificationService;
+    private readonly ITokensService _tokensService;
     private readonly UserManager<UserModel> _userManager;
-    private readonly ITwoFactorTokenService _twoFactorTokenService;
+    private readonly ITwoFactorAuthenticationService _twoFactorAuthenticationService;
 
     public AuthenticationService(
-        ITokenFactory tokenFactory,
-        IVerificationService verificationService,
+        ITokensService tokensService,
         UserManager<UserModel> userManager,
-        ITwoFactorTokenService twoFactorTokenService)
+        ITwoFactorAuthenticationService twoFactorAuthenticationService)
     {
-        _tokenFactory = tokenFactory;
-        _verificationService = verificationService;
+        _tokensService = tokensService;
         _userManager = userManager;
-        _twoFactorTokenService = twoFactorTokenService;
+        _twoFactorAuthenticationService = twoFactorAuthenticationService;
     }
-    
-    public async Task<UserAuthResponse> AuthenticateAsync(UserAuthRequest authRequest)
+
+    public async Task<UserAuthResponse> Authenticate(UserAuthRequest authRequest)
     {
         var user = await _userManager.FindByEmailAsync(authRequest.Email!);
 
@@ -38,35 +35,9 @@ public class AuthenticationService : IAuthenticationService
             throw new EmailNotConfirmedException("Unable to authenticate user, please confirm email.");
 
         if (user.TwoFactorEnabled)
-        {
-            var twoFactorCode = await _twoFactorTokenService.GenerateTwoFactorCode();
-            await _verificationService.SendTwoFactorCode(user.Email!, twoFactorCode);
+            return await _twoFactorAuthenticationService.GenerateTokenAndSendCode(user);
 
-            return new UserAuthResponse(
-                userId: user.Id,
-                token: null!,
-                requires2fa: true,
-                message: "Two-factor authentication required. A verification code has been sent to email.");
-        }
-
-        var token = await _tokenFactory.GenerateAuthToken(user);
-        return new UserAuthResponse(
-            userId: user.Id,
-            token: token,
-            requires2fa: false,
-            message: "Authenticated successfully.");
-    }
-    
-    public async Task<UserAuthResponse> AuthenticateTwoFactor(UserAuthTwoFactorRequest authTwoFactorRequest)
-    {
-        var user = await _userManager.FindByEmailAsync(authTwoFactorRequest.Email!);
-        if (user == null)
-            throw new UserNotFoundException();
-
-        if (!await _twoFactorTokenService.IsValidToken(authTwoFactorRequest.Token!))
-            throw new InvalidTokenException("Two factor code is invalid.");
-        
-        var token = await _tokenFactory.GenerateAuthToken(user);
+        var token = await _tokensService.GenerateAuthToken(user);
         return new UserAuthResponse(
             userId: user.Id,
             token: token,

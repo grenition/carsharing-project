@@ -1,7 +1,7 @@
 namespace Users.Application.DTO.Requests;
 
-public class UserAuthTwoFactorRequest
+public class UserTwoFactorAuthRequest
 {
-    public string? Email { get; set; }
     public string? Token { get; set; }
+    public string? Code { get; set; }
 }

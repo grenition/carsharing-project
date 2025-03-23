@@ -5,7 +5,6 @@ using Users.Application.Factories.Abstract;
 using Users.Application.Services.Abstract;
 using Users.Domain.Models;
 using Users.Infrastructure.Data;
-using Users.Infrastructure.Factories;
 using Users.Infrastructure.Services;
 
 namespace Users.Infrastructure.Extensions;
@@ -21,10 +20,10 @@ public static class UsersInfrastructureExtensions
             .AddSignInManager()
             .AddDefaultTokenProviders();
         
-        services.AddScoped<ITokenFactory, JwtTokenFactory>();
-
-        services.AddScoped<IVerificationService, VerificationService>();
-        services.AddScoped<ITwoFactorTokenService, TwoFactorTokenService>();
+        services.AddScoped<ITokensService, JwtTokensService>();
+        services.AddScoped<ITokensSendingService, TokensSendingService>();
+        services.AddScoped<INumericCodesService, NumericCodesService>();
+        services.AddScoped<ITwoFactorNumericCodesService, TwoFactorNumericCodesService>();
         
         return services;
     }

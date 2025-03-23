@@ -12,17 +12,20 @@ namespace Users.Application.Services;
 public class RegistrationService : IRegistrationService
 {
     private readonly UserManager<UserModel> _userManager;
-    private readonly IVerificationService _verificationService;
+    private readonly ITokensSendingService _tokensSendingService;
     private readonly IUsernameFactory _usernameFactory;
+    private readonly ITokensService _tokensService;
 
     public RegistrationService(
         UserManager<UserModel> userManager,
-        IVerificationService verificationService,
-        IUsernameFactory usernameFactory)
+        ITokensSendingService tokensSendingService,
+        IUsernameFactory usernameFactory,
+        ITokensService tokensService)
     {
         _userManager = userManager;
-        _verificationService = verificationService;
+        _tokensSendingService = tokensSendingService;
         _usernameFactory = usernameFactory;
+        _tokensService = tokensService;
     }
     
     public async Task<UserResponse> Register(UserRegisterRequest registerRequest)
@@ -48,14 +51,15 @@ public class RegistrationService : IRegistrationService
         }
 
         var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        await _verificationService.SendVerificationEmail(registerRequest.Email!, emailConfirmationToken);
+        await _tokensSendingService.SendAuthVerificationToken(registerRequest.Email!, emailConfirmationToken);
 
         return new UserResponse(user.Id, "User successfully registered. Verification code sended to email.");
     }
     
     public async Task<UserResponse> ConfirmEmail(UserConfirmRegistrationRequest resetPasswordRequest)
     {
-        var user = await _userManager.FindByEmailAsync(resetPasswordRequest.Email!);
+        var email = await _tokensService.GetTokenEmbeddedData(resetPasswordRequest.Token!, TokenEmbeddedData.UserEmail);
+        var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
             throw new UserNotFoundException();
 

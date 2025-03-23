@@ -10,19 +10,19 @@ namespace Users.API.Controllers;
 [Route("api/users/settings")]
 [ApiController]
 public class UsersSettingsController(
-    ITwoFactorService twoFactorService) : ControllerBase
+    ITwoFactorSettingsService twoFactorSettingsService) : ControllerBase
 {
     [HttpGet("two-factor")]
     public async Task<IActionResult> IsTwoFactorActive()
     {
         string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-        return Ok(await twoFactorService.IsTwoFactorActive(userId));
+        return Ok(await twoFactorSettingsService.IsTwoFactorActive(userId));
     }
     
     [HttpPut("two-factor")]
     public async Task<IActionResult> SetTwoFactorActive([FromBody] BooleanRequest request)
     {
         string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-        return Ok(await twoFactorService.SetTwoFactorActive(userId, request));
+        return Ok(await twoFactorSettingsService.SetTwoFactorActive(userId, request));
     }
 }

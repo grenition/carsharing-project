@@ -4,18 +4,21 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SharedFramework.Authentication.Configs;
-using Users.Application.Factories.Abstract;
+using Users.Application.Services.Abstract;
 using Users.Domain.Models;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
-namespace Users.Infrastructure.Factories;
+namespace Users.Infrastructure.Services;
 
-public class JwtTokensFactory : ITokensFactory
+public class JwtTokensService : ITokensService
 {
+    private const string TwoFactorCodeClaimName = "two_factor_code";
+    private const string TokenTypeClaimName = "type";
+    
     private readonly JwtConfig _jwtConfig;
     private readonly TwoFactorConfig _twoFactorConfig;
 
-    public JwtTokensFactory(
+    public JwtTokensService(
         IOptions<JwtConfig> jwtConfig,
         IOptions<TwoFactorConfig> twoFactorConfig)
     {
@@ -61,8 +64,9 @@ public class JwtTokensFactory : ITokensFactory
         {
             new Claim(JwtRegisteredClaimNames.Sub, userModel.Id),
             new Claim(JwtRegisteredClaimNames.Email, userModel.Email!),
-            new Claim("type", "2fa"),
-            new Claim("two_factor_code", encryptedCode)
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(TokenTypeClaimName, "2fa"),
+            new Claim(TwoFactorCodeClaimName, encryptedCode)
         });
 
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -80,4 +84,36 @@ public class JwtTokensFactory : ITokensFactory
 
         return Task.FromResult(tokenString);
     }
+    public Task<string> GetTokenEmbeddedData(string token, TokenEmbeddedData data)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        JwtSecurityToken jwtToken;
+
+        try
+        {
+            jwtToken = tokenHandler.ReadJwtToken(token);
+        }
+        catch
+        {
+            throw new SecurityTokenException("Invalid token format");
+        }
+
+        var claimType = data switch
+        {
+            TokenEmbeddedData.UserId => JwtRegisteredClaimNames.Sub,
+            TokenEmbeddedData.UserEmail => JwtRegisteredClaimNames.Email,
+            TokenEmbeddedData.TokenId => JwtRegisteredClaimNames.Jti,
+            TokenEmbeddedData.TokenType => TokenTypeClaimName,
+            TokenEmbeddedData.TwoFactorCode => TwoFactorCodeClaimName,
+            _ => throw new ArgumentOutOfRangeException(nameof(data), data, "Unsupported embedded data type")
+        };
+
+        var claimValue = jwtToken.Claims.FirstOrDefault(c => c.Type == claimType)?.Value;
+
+        if (claimValue == null)
+            throw new InvalidOperationException($"Claim '{claimType}' not found in token");
+
+        return Task.FromResult(claimValue);
+    }
+
 }

@@ -5,6 +5,5 @@ namespace Users.Application.Services.Abstract;
 
 public interface IAuthenticationService
 {
-    Task<UserAuthResponse> AuthenticateAsync(UserAuthRequest authRequest);
-    Task<UserAuthResponse> AuthenticateTwoFactor(UserAuthTwoFactorRequest authTwoFactorRequest);
+    Task<UserAuthResponse> Authenticate(UserAuthRequest authRequest);
 }

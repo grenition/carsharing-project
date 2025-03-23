@@ -8,12 +8,19 @@ namespace Users.API.Controllers;
 [ApiController]
 public class UsersAuthController(
     IAuthenticationService authenticationService,
-    IRegistrationService registrationService) : ControllerBase
+    IRegistrationService registrationService,
+    ITwoFactorAuthenticationService twoFactorAuthenticationService) : ControllerBase
 {
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserAuthRequest userAuthRequest)
     {
-        return Ok(await authenticationService.AuthenticateAsync(userAuthRequest));
+        return Ok(await authenticationService.Authenticate(userAuthRequest));
+    }
+    
+    [HttpPost("login/2fa")]
+    public async Task<IActionResult> Login2Fa([FromBody] UserTwoFactorAuthRequest userAuthRequest)
+    {
+        return Ok(await twoFactorAuthenticationService.Authenticate(userAuthRequest));
     }
 
     [HttpPost("register")]

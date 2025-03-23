@@ -14,7 +14,8 @@ public static class UsersApplicationExtensions
         
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IRegistrationService, RegistrationService>();
-        services.AddScoped<ITwoFactorService, TwoFactorService>();
+        services.AddScoped<ITwoFactorSettingsService, TwoFactorSettingsService>();
+        services.AddScoped<ITwoFactorAuthenticationService, TwoFactorAuthenticationService>();
         
         return services;
     }
