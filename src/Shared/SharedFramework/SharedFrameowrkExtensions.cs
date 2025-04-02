@@ -9,6 +9,7 @@ using SharedFramework.Database;
 using SharedFramework.Email;
 using SharedFramework.Exceptions;
 using SharedFramework.OpenAPI;
+using SharedFramework.Security.Cors;
 
 namespace SharedFramework;
 
@@ -25,6 +26,7 @@ public static class SharedFrameowrkExtensions
         services.AddBearerAuthentication(configuration, credentialsProvider);
         services.AddApplicationServices(configuration);
         services.AddEmailServices(configuration, credentialsProvider);
+        services.AddCors(configuration);
         
         return services;
     }
@@ -33,6 +35,7 @@ public static class SharedFrameowrkExtensions
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseCors(app.Configuration);
 
         app.UseErrorHandling();
         if (app.Environment.IsDevelopment())
