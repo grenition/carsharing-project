@@ -17,7 +17,7 @@ public class UsersAuthController(
         return Ok(await authenticationService.Authenticate(userAuthRequest));
     }
     
-    [HttpPost("login/2fa")]
+    [HttpPost("login/two-factor")]
     public async Task<IActionResult> Login2Fa([FromBody] UserTwoFactorAuthRequest userAuthRequest)
     {
         return Ok(await twoFactorAuthenticationService.Authenticate(userAuthRequest));

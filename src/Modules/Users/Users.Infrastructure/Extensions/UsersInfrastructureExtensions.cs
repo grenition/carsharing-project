@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using SharedFramework.Database;
-using Users.Application.Factories.Abstract;
 using Users.Application.Services.Abstract;
 using Users.Domain.Models;
 using Users.Infrastructure.Data;
