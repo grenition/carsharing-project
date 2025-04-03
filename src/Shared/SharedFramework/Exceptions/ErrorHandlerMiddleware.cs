@@ -1,20 +1,25 @@
 using System.Collections.Concurrent;
 using System.Net;
-using Humanizer;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SharedFramework.Extensions;
 
 namespace SharedFramework.Exceptions;
 
 public class ErrorHandlerMiddleware : IMiddleware
 {
-    private static readonly ConcurrentDictionary<Type, string> Codes = new();
+    private static readonly ConcurrentDictionary<Type, string> _titles = new();
 
     private readonly ILogger<ErrorHandlerMiddleware> _logger;
-    
-    public ErrorHandlerMiddleware(ILogger<ErrorHandlerMiddleware> logger)
+    private readonly IProblemDetailsService _problemDetailsService;
+
+    public ErrorHandlerMiddleware(
+        ILogger<ErrorHandlerMiddleware> logger,
+        IProblemDetailsService problemDetailsService)
     {
         _logger = logger;
+        _problemDetailsService = problemDetailsService;
     }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -25,38 +30,60 @@ public class ErrorHandlerMiddleware : IMiddleware
         }
         catch (Exception exception)
         {
-            await HandleErrorAsync(context, exception);
+            await HandleExceptionAsync(context, exception);
         }
     }
 
-    private async Task HandleErrorAsync(HttpContext context, Exception exception)
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        var errorResponse = exception switch
+        if (exception is ApiException apiEx)
         {
-            ApiException ex => new ExceptionResponse(
-                new ErrorsResponse(new Error(GetErrorCode(ex), ex.Message)), ex.StatusCode),
-            _ => new ExceptionResponse(new ErrorsResponse(
-                    new Error("error", "There was an internal error.")), HttpStatusCode.InternalServerError)
-        };
-        
-        context.Response.StatusCode = (int)(errorResponse?.StatusCode ?? HttpStatusCode.InternalServerError);
-        
-        if(context.Response.StatusCode == (int)HttpStatusCode.InternalServerError)
-            _logger.LogError(exception, exception.Message);
-        
-        var responce = errorResponse?.Response;
-        if (responce is null)
-            return;
+            var title = _titles.GetOrAdd(exception.GetType(), exType =>
+                exType.Name
+                    .RemovePostfix("Exception")
+                    .AddSpacesBetweenWords()
+            );
 
-        await context.Response.WriteAsJsonAsync(responce);
+            await WriteProblemAsync(context, apiEx.StatusCode, apiEx.Message, title);
+        }
+        else
+        {
+            _logger.LogError(exception, "Internal Server Error");
+            await WriteProblemAsync(context, HttpStatusCode.InternalServerError, "An error happened on server side.");
+        }
     }
 
-    private record Error(string Code, string Message);
-    private record ErrorsResponse(params Error[] Errors);
-
-    private static string GetErrorCode(object exception)
+    private async Task WriteProblemAsync(
+        HttpContext context,
+        HttpStatusCode statusCode,
+        string detail,
+        string? customTitle = null)
     {
-        var type = exception.GetType();
-        return Codes.GetOrAdd(type, type.Name.Underscore().Replace("_exception", string.Empty));
+        context.Response.StatusCode = (int)statusCode;
+
+        var problemDetails = new ProblemDetails
+        {
+            Title = customTitle ?? GetTitle(statusCode),
+            Detail = detail
+        };
+
+        await _problemDetailsService.WriteAsync(
+            new ProblemDetailsContext
+            {
+                HttpContext = context,
+                ProblemDetails = problemDetails
+            }
+        );
     }
+
+    private static string GetTitle(HttpStatusCode statusCode) => statusCode switch
+    {
+        HttpStatusCode.BadRequest => "Bad Request",
+        HttpStatusCode.NotFound => "Not Found",
+        HttpStatusCode.Unauthorized => "Unauthorized",
+        HttpStatusCode.Forbidden => "Forbidden",
+        HttpStatusCode.Conflict => "Conflict",
+        HttpStatusCode.InternalServerError => "Internal Server Error",
+        _ => "Error"
+    };
 }
