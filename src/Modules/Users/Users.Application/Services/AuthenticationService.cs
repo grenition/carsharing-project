@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Users.Application.DTO.Requests;
 using Users.Application.DTO.Responses;
 using Users.Application.Exception;
-using Users.Application.Factories.Abstract;
 using Users.Application.Services.Abstract;
 using Users.Domain.Models;
 

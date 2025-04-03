@@ -14,18 +14,15 @@ public class RegistrationService : IRegistrationService
     private readonly UserManager<UserModel> _userManager;
     private readonly ITokensSendingService _tokensSendingService;
     private readonly IUsernameFactory _usernameFactory;
-    private readonly ITokensService _tokensService;
 
     public RegistrationService(
         UserManager<UserModel> userManager,
         ITokensSendingService tokensSendingService,
-        IUsernameFactory usernameFactory,
-        ITokensService tokensService)
+        IUsernameFactory usernameFactory)
     {
         _userManager = userManager;
         _tokensSendingService = tokensSendingService;
         _usernameFactory = usernameFactory;
-        _tokensService = tokensService;
     }
     
     public async Task<UserResponse> Register(UserRegisterRequest registerRequest)
@@ -58,8 +55,7 @@ public class RegistrationService : IRegistrationService
     
     public async Task<UserResponse> ConfirmEmail(UserConfirmRegistrationRequest resetPasswordRequest)
     {
-        var email = await _tokensService.GetTokenEmbeddedData(resetPasswordRequest.Token!, TokenEmbeddedData.UserEmail);
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await _userManager.FindByEmailAsync(resetPasswordRequest.Email!);
         if (user == null)
             throw new UserNotFoundException();
 
