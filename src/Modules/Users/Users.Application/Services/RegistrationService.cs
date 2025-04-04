@@ -48,7 +48,8 @@ public class RegistrationService : IRegistrationService
         }
 
         var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        await _tokensSendingService.SendAuthVerificationToken(registerRequest.Email!, emailConfirmationToken);
+        await _tokensSendingService.SendAuthVerificationToken(
+            registerRequest.Email!, emailConfirmationToken, registerRequest.BaseUrl!);
 
         return new UserResponse(user.Id, "User successfully registered. Verification code sended to email.");
     }

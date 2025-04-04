@@ -10,11 +10,16 @@ public class TokensSendingService : ITokensSendingService
     {
         _emailSender = emailSender;
     }
-    
-    public async Task SendAuthVerificationToken(string to, string token)
+
+    public async Task SendAuthVerificationToken(string email, string token, string baseUrl)
     {
-        await _emailSender.Send(new EmailContent("Your confirmation token", token), to);
+        var confirmLink = $"{baseUrl}/auth/confirm-email?login={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}";
+
+        var subject = "Email Confirmation";
+
+        await _emailSender.Send(new EmailContent(subject, confirmLink), email);
     }
+
     public async Task SendPasswordResetToken(string to, string token)
     {
         await _emailSender.Send(new EmailContent("Your password reset token", token), to);
