@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace SharedFramework.Credentials;
@@ -6,10 +7,11 @@ public static class CredentialsExtensions
 {
     public static IServiceCollection AddEnvCredentialsProvider(
         this IServiceCollection services,
-        out ICredentialsProvider credentialsProvider,
-        string path = ".env")
+        IConfiguration configuration,
+        out ICredentialsProvider credentialsProvider)
     {
-        credentialsProvider = new EnvCredentialsProvider(path);
+        var path = configuration["Credentials:EnvFile"];
+        credentialsProvider = new EnvCredentialsProvider(path!);
         return services.AddSingleton(credentialsProvider);
     }
 }

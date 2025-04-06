@@ -13,7 +13,7 @@ using SharedFramework.Security.Cors;
 
 namespace SharedFramework;
 
-public static class SharedFrameowrkExtensions
+public static class SharedFrameworkExtensions
 {
     public static IServiceCollection AddSharedFramework(this IServiceCollection services, IConfiguration configuration)
     {
@@ -22,7 +22,7 @@ public static class SharedFrameowrkExtensions
         services.AddOpenApiServices();
         services.AddDataProtection();
         services.AddErrorHandling();
-        services.AddEnvCredentialsProvider(out ICredentialsProvider credentialsProvider);
+        services.AddEnvCredentialsProvider(configuration, out ICredentialsProvider credentialsProvider);
         services.AddBearerAuthentication(configuration, credentialsProvider);
         services.AddApplicationServices(configuration);
         services.AddEmailServices(configuration, credentialsProvider);

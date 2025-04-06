@@ -15,7 +15,8 @@ public class EnvCredentialsProvider : ICredentialsProvider
     
     public EnvCredentialsProvider(string envFilePath)
     {
-        Env.Load(envFilePath);
+        if(File.Exists(envFilePath)) 
+            Env.Load(envFilePath);
     }
     
     public Task<string> GetAsync(CredentialType type)
