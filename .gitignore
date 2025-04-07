@@ -117,8 +117,12 @@ src/.vs/config/applicationhost.config
 # JetBrains Rider's auto generated files
 .idea/
 
-# Evnvironment variables
+# Sensitive data
+proxy/ssl/
+*.pem
+*.key
 .env
+
 
 # Debug configurations
 docker-compose.override.yml
