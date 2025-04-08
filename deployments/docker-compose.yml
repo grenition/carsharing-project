@@ -41,12 +41,10 @@ services:
     networks:
       - app-default-net
   frontend:
-    image: nginx:alpine
+    image: arssseniy/f-client
     restart: always
     expose:
       - "80"
-    volumes:
-      - ./stubs:/usr/share/nginx/html:ro
     networks:
       - app-default-net
       
