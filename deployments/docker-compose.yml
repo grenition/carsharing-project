@@ -14,7 +14,7 @@ services:
       - app-default-net
   apphost:
     build:
-      context: .
+      context: ../
       dockerfile: src/API/AppHost/Dockerfile
     restart: always
     depends_on:
@@ -46,7 +46,7 @@ services:
     expose:
       - "80"
     volumes:
-      - ./stub:/usr/share/nginx/html:ro
+      - ./stubs:/usr/share/nginx/html:ro
     networks:
       - app-default-net
       
