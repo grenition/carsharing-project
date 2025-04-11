@@ -21,17 +21,11 @@ down-dev:
 down-prod:
 	docker-compose -p $(PROJECT_PROD_NAME) -f $(COMPOSE_BASE_FILE) down
 
-restart-dev:
-	docker-compose -p $(PROJECT_DEV_NAME) -f $(COMPOSE_BASE_FILE) -f $(COMPOSE_DEV_FILE) down
-	docker-compose -p $(PROJECT_DEV_NAME) -f $(COMPOSE_BASE_FILE) -f $(COMPOSE_DEV_FILE) up --build
+restart-dev: down-dev up-dev
 
-restart-dev-daemon:
-	docker-compose -p $(PROJECT_DEV_NAME) -f $(COMPOSE_BASE_FILE) -f $(COMPOSE_DEV_FILE) down
-	docker-compose -p $(PROJECT_DEV_NAME) -f $(COMPOSE_BASE_FILE) -f $(COMPOSE_DEV_FILE) up --build -d
+restart-dev-daemon: down-dev up-dev-daemon
 
-restart-prod:
-	docker-compose -p $(PROJECT_PROD_NAME) -f $(COMPOSE_BASE_FILE) down
-	docker-compose -p $(PROJECT_PROD_NAME) -f $(COMPOSE_BASE_FILE) up --build -d
+restart-prod: down-prod up-prod
 
 psql-shell:
 	@export $$(grep -v '^#' deployments/.env | xargs) && \
