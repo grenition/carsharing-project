@@ -1,4 +1,5 @@
 using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using SharedFramework.Application;
@@ -28,10 +29,23 @@ public class EmailSender : IEmailSender
         };
 
         using var client = new SmtpClient();
-        await client.ConnectAsync(_smtpConfig.Value.ServerAddress, _smtpConfig.Value.ServerPort,
-            MailKit.Security.SecureSocketOptions.StartTls);
+        var securityOption = GetSecureSocketOption(_smtpConfig.Value.SecurityOption);
+
+        await client.ConnectAsync(
+            _smtpConfig.Value.ServerAddress,
+            _smtpConfig.Value.ServerPort,
+            securityOption
+        );
         await client.AuthenticateAsync(_smtpConfig.Value.UserAddress, _smtpConfig.Value.UserPassword);
         await client.SendAsync(emailMessage);
         await client.DisconnectAsync(true);
     }
+    
+    private SecureSocketOptions GetSecureSocketOption(string? option) => option?.ToLower() switch
+    {
+        "none" => SecureSocketOptions.None,
+        "starttls" => SecureSocketOptions.StartTls,
+        "ssl" or "sslonconnect" => SecureSocketOptions.SslOnConnect,
+        _ => SecureSocketOptions.Auto
+    };
 }

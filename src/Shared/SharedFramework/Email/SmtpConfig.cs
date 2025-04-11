@@ -6,4 +6,5 @@ public class SmtpConfig
     public int ServerPort { get; set; }
     public string? UserAddress { get; set; }
     public string? UserPassword { get; set; }
+    public string? SecurityOption { get; set; } 
 }
