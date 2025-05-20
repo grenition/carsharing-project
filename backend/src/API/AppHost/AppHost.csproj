@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\CarRental\CarRental.csproj" />
     <ProjectReference Include="..\..\Modules\Users\Users.API\Users.API.csproj" />
   </ItemGroup>
 
