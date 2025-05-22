@@ -14,4 +14,13 @@ public static class CredentialsExtensions
         credentialsProvider = new EnvCredentialsProvider(path!);
         return services.AddSingleton(credentialsProvider);
     }
+    
+    public static IServiceCollection AddJsonCredentialsProvider(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        out ICredentialsProvider credentialsProvider)
+    {
+        credentialsProvider = new AppSettingsCredentialsProvider(configuration);
+        return services.AddSingleton(credentialsProvider);
+    }
 }

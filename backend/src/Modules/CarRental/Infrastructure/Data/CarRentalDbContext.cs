@@ -1,7 +1,7 @@
 using CarRental.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarRental.Infrastructure;
+namespace CarRental.Infrastructure.Data;
 
 public class CarRentalDbContext(DbContextOptions<CarRentalDbContext> options) : DbContext(options)
 {

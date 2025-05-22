@@ -22,10 +22,10 @@ public class EnvCredentialsProvider : ICredentialsProvider
     public Task<string> GetAsync(CredentialType type)
     {
         if (!EnvMap.ContainsKey(type))
-            throw new EnvCredentialNotMappedException();
+            throw new CredentialNotMappedException();
 
         var envKey = EnvMap[type];
-        var credential = Environment.GetEnvironmentVariable(envKey) ?? throw new EnvNotFoundException();
+        var credential = Environment.GetEnvironmentVariable(envKey) ?? throw new CredentialNotFoundException();
         
         return Task.FromResult(credential);
     }

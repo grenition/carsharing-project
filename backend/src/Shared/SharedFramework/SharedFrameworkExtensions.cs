@@ -22,7 +22,7 @@ public static class SharedFrameworkExtensions
         services.AddOpenApiServices();
         services.AddDataProtection();
         services.AddErrorHandling();
-        services.AddEnvCredentialsProvider(configuration, out ICredentialsProvider credentialsProvider);
+        services.AddJsonCredentialsProvider(configuration, out ICredentialsProvider credentialsProvider);
         services.AddBearerAuthentication(configuration, credentialsProvider);
         services.AddApplicationServices(configuration);
         services.AddEmailServices(configuration, credentialsProvider);
