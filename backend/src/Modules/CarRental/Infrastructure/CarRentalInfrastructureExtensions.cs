@@ -10,7 +10,7 @@ public static class CarRentalInfrastructureExtensions
 {
     public static IServiceCollection AddCarRentalInfrastructure(this IServiceCollection services)
     {
-        services.AddPostgres<CarRentalDbContext>();
+        services.AddSqlite<CarRentalDbContext>();
 
         services.AddScoped<DbContext, CarRentalDbContext>();
 

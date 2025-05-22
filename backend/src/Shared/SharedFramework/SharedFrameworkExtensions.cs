@@ -18,7 +18,7 @@ public static class SharedFrameworkExtensions
     public static IServiceCollection AddSharedFramework(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddControllers();
-        services.AddPostgres(configuration);
+        services.AddSqlite(configuration);
         services.AddOpenApiServices();
         services.AddDataProtection();
         services.AddErrorHandling();

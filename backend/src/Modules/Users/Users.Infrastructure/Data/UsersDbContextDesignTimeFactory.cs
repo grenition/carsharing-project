@@ -6,11 +6,10 @@ namespace Users.Infrastructure.Data;
 
 public class UsersDbContextDesignTimeFactory : IDesignTimeDbContextFactory<UsersDbContext>
 {
-
     public UsersDbContext CreateDbContext(string[] args)
     {
         var builder = new DbContextOptionsBuilder<UsersDbContext>();
-        builder.AddPostgres();
+        builder.AddSqlite();
 
         return new UsersDbContext(builder.Options);
     }

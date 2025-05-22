@@ -10,6 +10,7 @@ COPY ["src/Modules/Users/Users.API/Users.API.csproj", "Modules/Users/Users.API/"
 COPY ["src/Modules/Users/Users.Application/Users.Application.csproj", "Modules/Users/Users.Application/"]
 COPY ["src/Modules/Users/Users.Domain/Users.Domain.csproj", "Modules/Users/Users.Domain/"]
 COPY ["src/Modules/Users/Users.Infrastructure/Users.Infrastructure.csproj", "Modules/Users/Users.Infrastructure/"]
+COPY ["src/Modules/CarRental/CarRental.csproj", "Modules/CarRental/"]
 RUN dotnet restore "./API/AppHost/AppHost.csproj"
 
 COPY ./src .

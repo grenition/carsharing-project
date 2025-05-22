@@ -12,7 +12,7 @@ public static class UsersInfrastructureExtensions
 {
     public static IServiceCollection AddUsersInfrastructure(this IServiceCollection services)
     {
-        services.AddPostgres<UsersDbContext>();
+        services.AddSqlite<UsersDbContext>();
         
         services.AddIdentityCore<UserModel>()
             .AddEntityFrameworkStores<UsersDbContext>()
