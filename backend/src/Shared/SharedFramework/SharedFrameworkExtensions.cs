@@ -25,8 +25,6 @@ public static class SharedFrameworkExtensions
         services.AddJsonCredentialsProvider(configuration, out ICredentialsProvider credentialsProvider);
         services.AddBearerAuthentication(configuration, credentialsProvider);
         services.AddApplicationServices(configuration);
-        services.AddEmailServices(configuration, credentialsProvider);
-        services.AddCors(configuration);
         
         return services;
     }
@@ -35,7 +33,6 @@ public static class SharedFrameworkExtensions
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseCors(app.Configuration);
 
         app.UseErrorHandling();
         if (app.Environment.IsDevelopment())

@@ -12,16 +12,13 @@ namespace Users.Application.Services;
 public class RegistrationService : IRegistrationService
 {
     private readonly UserManager<UserModel> _userManager;
-    private readonly ITokensSendingService _tokensSendingService;
     private readonly IUsernameFactory _usernameFactory;
 
     public RegistrationService(
         UserManager<UserModel> userManager,
-        ITokensSendingService tokensSendingService,
         IUsernameFactory usernameFactory)
     {
         _userManager = userManager;
-        _tokensSendingService = tokensSendingService;
         _usernameFactory = usernameFactory;
     }
     
@@ -47,23 +44,6 @@ public class RegistrationService : IRegistrationService
             throw new UserCreationFailureException(errors);
         }
 
-        var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        await _tokensSendingService.SendAuthVerificationToken(
-            registerRequest.Email!, emailConfirmationToken, registerRequest.BaseUrl!);
-
-        return new UserResponse(user.Id, "User successfully registered. Verification code sended to email.");
-    }
-    
-    public async Task<UserResponse> ConfirmEmail(UserConfirmRegistrationRequest resetPasswordRequest)
-    {
-        var user = await _userManager.FindByEmailAsync(resetPasswordRequest.Email!);
-        if (user == null)
-            throw new UserNotFoundException();
-
-        var confirmResult = await _userManager.ConfirmEmailAsync(user, resetPasswordRequest.Token!);
-        if (!confirmResult.Succeeded)
-            throw new EmailConfirmationFailureException(string.Join("; ", confirmResult.Errors.Select(e => e.Description)));
-        
-        return new UserResponse(user.Id, "User email successfully confirmed.");
+        return new UserResponse(user.Id, "User successfully registered.");
     }
 }

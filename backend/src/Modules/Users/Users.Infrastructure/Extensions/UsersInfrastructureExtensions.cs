@@ -20,9 +20,7 @@ public static class UsersInfrastructureExtensions
             .AddDefaultTokenProviders();
         
         services.AddScoped<ITokensService, JwtTokensService>();
-        services.AddScoped<ITokensSendingService, TokensSendingService>();
         services.AddScoped<INumericCodesService, NumericCodesService>();
-        services.AddScoped<ITwoFactorNumericCodesService, TwoFactorNumericCodesService>();
         
         return services;
     }
