@@ -1,12 +1,14 @@
 using CarRental.Domain.Enums;
 using CarRental.Domain.Models;
 using CarRental.Domain.Values;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedFramework.Data.Repositories;
 
 namespace CarRental.API;
 
 [ApiController]
+[Authorize]
 [Route("api/carsharing")]
 public class CarSharingController : ControllerBase
 {
