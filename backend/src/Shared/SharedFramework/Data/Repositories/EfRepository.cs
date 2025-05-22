@@ -14,22 +14,30 @@ public class EfRepository<T> : IRepository<T> where T : class
         _dbSet = _dbContext.Set<T>();
     }
 
-    public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => await _dbSet.FindAsync([id], cancellationToken);
+    public Task<T?> GetByIdAsync(Guid id, CancellationToken ct = default) =>
+        _dbSet.FindAsync([id], ct).AsTask();
 
-    public async Task<List<T>> ListAsync(CancellationToken cancellationToken = default)
-        => await _dbSet.ToListAsync(cancellationToken);
+    public Task<List<T>> GetAllAsync(CancellationToken ct = default) =>
+        _dbSet.ToListAsync(ct);
 
-    public async Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
-        => await _dbSet.Where(predicate).ToListAsync(cancellationToken);
+    public Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default) =>
+        _dbSet.Where(predicate).ToListAsync(ct);
 
-    public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
-        => await _dbSet.AddAsync(entity, cancellationToken);
+    public Task AddAsync(T entity, CancellationToken ct = default) =>
+        _dbSet.AddAsync(entity, ct).AsTask();
 
-    public void Update(T entity) => _dbSet.Update(entity);
+    public Task UpdateAsync(T entity, CancellationToken ct = default)
+    {
+        _dbSet.Update(entity);
+        return Task.CompletedTask;
+    }
 
-    public void Remove(T entity) => _dbSet.Remove(entity);
+    public Task DeleteAsync(T entity, CancellationToken ct = default)
+    {
+        _dbSet.Remove(entity);
+        return Task.CompletedTask;
+    }
 
-    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
-        => _dbContext.SaveChangesAsync(cancellationToken);
+    public Task SaveChangesAsync(CancellationToken ct = default) =>
+        _dbContext.SaveChangesAsync(ct);
 }
