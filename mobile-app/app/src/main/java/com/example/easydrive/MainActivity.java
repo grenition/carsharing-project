@@ -8,7 +8,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.easydrive.fragments.LoginFragment;
+import com.example.easydrive.fragments.SplashFragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragmentContainer, new LoginFragment())
+                .replace(R.id.fragmentContainer, new SplashFragment())
                 .commit();
         }
     }
