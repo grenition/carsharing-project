@@ -9,17 +9,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.easydrive.R;
-import com.example.easydrive.api.AuthApiService;
+import com.example.easydrive.network.ApiService;
 import com.example.easydrive.databinding.FragmentRegisterBinding;
-import dagger.hilt.android.AndroidEntryPoint;
+import com.example.easydrive.network.model.UserRegisterRequest;
 import javax.inject.Inject;
+import dagger.hilt.android.AndroidEntryPoint;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @AndroidEntryPoint
 public class RegisterFragment extends Fragment {
     private FragmentRegisterBinding binding;
     
     @Inject
-    AuthApiService authApiService;
+    ApiService apiService;
 
     @Nullable
     @Override
@@ -40,24 +44,43 @@ public class RegisterFragment extends Fragment {
         binding.registerButton.setOnClickListener(v -> {
             String email = binding.emailInput.getText().toString();
             String password = binding.passwordInput.getText().toString();
-            String name = binding.nameInput.getText().toString();
             
-            authApiService.register(email, password, name, new AuthApiService.AuthCallback() {
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(getContext(), "All fields are required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            UserRegisterRequest registerRequest = new UserRegisterRequest(email, password);
+            apiService.register(registerRequest).enqueue(new Callback<Void>() {
                 @Override
-                public void onSuccess(String token) {
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(() -> {
-                            Toast.makeText(getContext(), "Registration successful!", Toast.LENGTH_SHORT).show();
-                            // TODO: Navigate to main screen or store token
-                        });
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        // Handle successful registration
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(getContext(), "Registration successful!", Toast.LENGTH_SHORT).show();
+                                // TODO: Navigate to login screen or main screen depending on flow
+                                // For now, navigate back to login
+                                getActivity().getSupportFragmentManager().popBackStack();
+                            });
+                        }
+                    } else {
+                        // Handle registration error
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                // Since the response body is Void on success, we can't get a specific error message from it on failure directly
+                                Toast.makeText(getContext(), "Registration failed. Please check details.", Toast.LENGTH_SHORT).show();
+                            });
+                        }
                     }
                 }
 
                 @Override
-                public void onError(String error) {
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    // Handle network errors
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Network Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                         });
                     }
                 }

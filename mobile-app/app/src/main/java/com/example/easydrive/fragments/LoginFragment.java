@@ -11,19 +11,23 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.easydrive.R;
-import com.example.easydrive.api.AuthApiService;
+import com.example.easydrive.network.ApiService;
 import com.example.easydrive.databinding.FragmentLoginBinding;
+import com.example.easydrive.network.model.UserAuthRequest;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @AndroidEntryPoint
 public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     
     @Inject
-    AuthApiService authApiService;
+    ApiService apiService;
 
     @Nullable
     @Override
@@ -42,13 +46,51 @@ public class LoginFragment extends Fragment {
 
     private void setupLoginButton() {
         binding.loginButton.setOnClickListener(v -> {
-            // Ignore login conditions for now, always navigate to main page
-            if (getActivity() != null) {
-                getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragmentContainer, new MainPageFragment())
-                    .commit();
+            String email = binding.emailInput.getText().toString();
+            String password = binding.passwordInput.getText().toString();
+            
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(getContext(), "Email and password cannot be empty", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            UserAuthRequest loginRequest = new UserAuthRequest(email, password);
+            apiService.login(loginRequest).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        // Handle successful login
+                         if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(getContext(), "Login successful!", Toast.LENGTH_SHORT).show();
+                                // TODO: Store token if needed and navigate to main screen
+                                 getActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragmentContainer, new MainPageFragment())
+                                    .commit();
+                            });
+                         }
+                    } else {
+                        // Handle login error
+                         if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                // Since the response body is Void on success, we can't get a specific error message from it on failure directly
+                                 Toast.makeText(getContext(), "Login failed. Please check credentials.", Toast.LENGTH_SHORT).show();
+                            });
+                         }
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    // Handle network errors
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                             Toast.makeText(getContext(), "Network Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                }
+            });
         });
     }
 
