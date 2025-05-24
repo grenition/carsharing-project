@@ -13,6 +13,10 @@ public class CarModel : BaseEntity
 
     public string Manufacturer { get; set; } = null!;
 
+    public decimal Price { get; set; }
+
+    public decimal RentPrice { get; set; }
+
     public int Year { get; set; }
 
     public float FuelLevel { get; set; }

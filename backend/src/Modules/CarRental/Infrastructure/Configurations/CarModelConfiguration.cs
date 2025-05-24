@@ -14,6 +14,8 @@ public class CarModelConfiguration : IEntityTypeConfiguration<CarModel>
         builder.Property(c => c.LicensePlate).IsRequired();
         builder.Property(c => c.Manufacturer).IsRequired();
         builder.Property(c => c.Model).IsRequired();
+        builder.Property(c => c.Price).IsRequired();
+        builder.Property(c => c.RentPrice).IsRequired();
 
         builder.OwnsOne(c => c.Location);
 
