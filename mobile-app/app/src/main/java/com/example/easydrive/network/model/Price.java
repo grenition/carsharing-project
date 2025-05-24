@@ -1,8 +1,11 @@
 package com.example.easydrive.network.model;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
-public class Price {
+public class Price implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     @SerializedName("amount")
     private double amount;
     

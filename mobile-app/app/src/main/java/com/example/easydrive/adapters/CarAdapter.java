@@ -6,11 +6,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 
 import com.example.easydrive.R;
+import com.example.easydrive.fragments.RentFragment;
 import com.example.easydrive.network.model.CarModel;
 
 import java.util.List;
@@ -18,10 +20,20 @@ import java.util.List;
 public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
 
     private List<CarModel> carList;
+    private FragmentActivity activity;
+    private RentFragment.OnRentConfirmedListener rentConfirmedListener;
+
+    public CarAdapter(FragmentActivity activity) {
+        this.activity = activity;
+    }
 
     public void setCarList(List<CarModel> carList) {
         this.carList = carList;
         notifyDataSetChanged();
+    }
+
+    public void setOnRentConfirmedListener(RentFragment.OnRentConfirmedListener listener) {
+        this.rentConfirmedListener = listener;
     }
 
     @NonNull
@@ -42,7 +54,7 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
         return carList != null ? carList.size() : 0;
     }
 
-    static class CarViewHolder extends RecyclerView.ViewHolder {
+    class CarViewHolder extends RecyclerView.ViewHolder {
         TextView textViewCarModel;
         TextView textViewCarManufacturer;
         TextView textViewLicensePlate;
@@ -69,6 +81,12 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
             textViewFuelLevel.setText("Fuel: " + String.format("%.1f%%", car.getFuelLevel()));
             // Display the actual price per day
             buttonRent.setText(String.format("$%.2f/day", car.getPricePerDay()));
+
+            buttonRent.setOnClickListener(v -> {
+                RentFragment rentFragment = RentFragment.newInstance(car);
+                rentFragment.setOnRentConfirmedListener(rentConfirmedListener);
+                rentFragment.show(activity.getSupportFragmentManager(), "rent_dialog");
+            });
         }
     }
 } 

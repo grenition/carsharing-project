@@ -1,8 +1,11 @@
 package com.example.easydrive.network.model;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
-public class Location {
+public class Location implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     @SerializedName("latitude")
     private double latitude;
     

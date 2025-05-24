@@ -49,8 +49,14 @@ public class MainPageFragment extends Fragment {
 
         recyclerView = binding.recyclerViewCars;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        carAdapter = new CarAdapter(); // Initialize the adapter
-        recyclerView.setAdapter(carAdapter); // Set the adapter
+        carAdapter = new CarAdapter(requireActivity());
+        recyclerView.setAdapter(carAdapter);
+
+        // Set up rent confirmation listener
+        carAdapter.setOnRentConfirmedListener(car -> {
+            // Refresh the car list after successful rental
+            fetchCars();
+        });
 
         fetchCars();
     }

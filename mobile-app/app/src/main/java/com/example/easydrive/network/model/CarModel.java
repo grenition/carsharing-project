@@ -2,10 +2,13 @@ package com.example.easydrive.network.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
-public class CarModel {
+public class CarModel implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     @SerializedName("id")
     private UUID id;
     
