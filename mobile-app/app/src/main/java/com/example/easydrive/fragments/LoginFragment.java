@@ -74,6 +74,7 @@ public class LoginFragment extends Fragment {
                                 Toast.makeText(getContext(), "Login successful!", Toast.LENGTH_SHORT).show();
                                  getActivity().getSupportFragmentManager()
                                     .beginTransaction()
+                                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                                     .replace(R.id.fragmentContainer, new MainPageFragment())
                                     .commit();
                             });

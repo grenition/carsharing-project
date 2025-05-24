@@ -98,6 +98,7 @@ public class AuthCheckFragment extends Fragment {
     private void navigateToMainPage() {
          FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         fragmentTransaction.replace(R.id.fragmentContainer, new MainPageFragment());
         fragmentTransaction.commit();
     }
