@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.easydrive.R;
 import com.example.easydrive.adapters.CarAdapter;
 import com.example.easydrive.databinding.FragmentMainPageBinding;
 import com.example.easydrive.network.ApiService;
@@ -27,6 +28,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import com.google.android.material.button.MaterialButton;
 
 @AndroidEntryPoint
 public class MainPageFragment extends Fragment {
@@ -49,10 +52,16 @@ public class MainPageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView = binding.recyclerViewCars;
+        recyclerView = view.findViewById(R.id.recyclerViewCars);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         carAdapter = new CarAdapter(requireActivity());
         recyclerView.setAdapter(carAdapter);
+
+        MaterialButton buttonShowRentals = view.findViewById(R.id.buttonShowRentals);
+        buttonShowRentals.setOnClickListener(v -> {
+            RentalsFragment rentalsFragment = new RentalsFragment();
+            rentalsFragment.show(getChildFragmentManager(), "rentals_dialog");
+        });
 
         // Set up rent confirmation listener
         carAdapter.setOnRentConfirmedListener(car -> {
@@ -94,5 +103,9 @@ public class MainPageFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public void refreshCarList() {
+        fetchCars();
     }
 } 

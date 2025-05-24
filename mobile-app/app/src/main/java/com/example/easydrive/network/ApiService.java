@@ -7,6 +7,7 @@ import com.example.easydrive.network.model.UserAuthRequest;
 import com.example.easydrive.network.model.UserModel;
 import com.example.easydrive.network.model.UserRegisterRequest;
 import com.example.easydrive.network.model.StartRentalRequest;
+import com.example.easydrive.network.model.EndRentalRequest;
 
 import java.util.List;
 
@@ -44,4 +45,7 @@ public interface ApiService {
 
     @POST("/api/carsharing/rentals/start")
     Call<RentalModel> startRental(@Body StartRentalRequest request);
+
+    @POST("/api/carsharing/rentals/end")
+    Call<RentalModel> endRental(@Body EndRentalRequest request);
 } 

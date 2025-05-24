@@ -3,4 +3,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="colorPrimaryBlue">#4FB8EF</color>
+    <color name="active_rental_background">#E3F2FD</color>
 </resources>
