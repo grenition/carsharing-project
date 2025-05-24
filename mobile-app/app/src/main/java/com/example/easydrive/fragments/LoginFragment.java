@@ -9,11 +9,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.easydrive.R;
 import com.example.easydrive.network.ApiService;
 import com.example.easydrive.databinding.FragmentLoginBinding;
+import com.example.easydrive.network.model.LoginResponse;
 import com.example.easydrive.network.model.UserAuthRequest;
+import com.example.easydrive.utils.TokenManager;
 
 import javax.inject.Inject;
 
@@ -28,6 +32,8 @@ public class LoginFragment extends Fragment {
     
     @Inject
     ApiService apiService;
+    @Inject
+    TokenManager tokenManager;
 
     @Nullable
     @Override
@@ -55,15 +61,17 @@ public class LoginFragment extends Fragment {
             }
 
             UserAuthRequest loginRequest = new UserAuthRequest(email, password);
-            apiService.login(loginRequest).enqueue(new Callback<Void>() {
+            apiService.login(loginRequest).enqueue(new Callback<LoginResponse>() {
                 @Override
-                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                    if (response.isSuccessful()) {
+                public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
                         // Handle successful login
+                        String token = response.body().getToken();
+                        tokenManager.saveToken(token);
+
                          if (getActivity() != null) {
                             getActivity().runOnUiThread(() -> {
                                 Toast.makeText(getContext(), "Login successful!", Toast.LENGTH_SHORT).show();
-                                // TODO: Store token if needed and navigate to main screen
                                  getActivity().getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragmentContainer, new MainPageFragment())
@@ -82,7 +90,7 @@ public class LoginFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
                     // Handle network errors
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="@color/colorPrimaryBlue"
+    tools:context=".fragments.AuthCheckFragment">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EasyDrive"
+        android:textSize="48sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rent your dream car"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="48dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonContinue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:layout_marginBottom="16dp"
+        app:cornerRadius="12dp"
+        app:backgroundTint="@android:color/white"
+        android:textColor="@color/colorPrimaryBlue"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonAuthorizeAgain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Authorize Again"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:textColor="@android:color/white"/>
+
+</LinearLayout> 
