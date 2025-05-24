@@ -67,8 +67,8 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
             textViewCarYear.setText("Year: " + car.getYear());
             // Assuming fuel level is already a percentage value (e.g., 78.5 for 78.5%)
             textViewFuelLevel.setText("Fuel: " + String.format("%.1f%%", car.getFuelLevel()));
-            // TODO: Get actual price data from CarModel if available
-            buttonRent.setText("$XX.XX/day"); // Placeholder price
+            // Display the actual price per day
+            buttonRent.setText(String.format("$%.2f/day", car.getPricePerDay()));
         }
     }
 } 

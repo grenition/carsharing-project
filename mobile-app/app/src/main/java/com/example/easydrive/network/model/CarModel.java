@@ -42,6 +42,9 @@ public class CarModel {
     @SerializedName("rentals")
     private List<RentalModel> rentals;
 
+    @SerializedName("pricePerDay")
+    private double pricePerDay;
+
     // Getters and setters
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
@@ -67,4 +70,6 @@ public class CarModel {
     public void setLastServiceDate(String lastServiceDate) { this.lastServiceDate = lastServiceDate; }
     public List<RentalModel> getRentals() { return rentals; }
     public void setRentals(List<RentalModel> rentals) { this.rentals = rentals; }
+    public double getPricePerDay() { return pricePerDay; }
+    public void setPricePerDay(double pricePerDay) { this.pricePerDay = pricePerDay; }
 } 
