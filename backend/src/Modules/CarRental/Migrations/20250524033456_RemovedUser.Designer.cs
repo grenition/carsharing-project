@@ -3,6 +3,7 @@ using System;
 using CarRental.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRental.Migrations
 {
     [DbContext(typeof(CarRentalDbContext))]
-    partial class CarRentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250524033456_RemovedUser")]
+    partial class RemovedUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
@@ -86,7 +89,14 @@ namespace CarRental.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RentalId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Payments");
                 });
@@ -110,9 +120,49 @@ namespace CarRental.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("CarId");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("Rentals");
+                });
+
+            modelBuilder.Entity("CarRental.Domain.Models.UserModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("IdentityId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("RegisteredAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CarRental.Domain.Models.CarModel", b =>
@@ -144,8 +194,37 @@ namespace CarRental.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("CarRental.Domain.Models.PaymentModel", b =>
+                {
+                    b.HasOne("CarRental.Domain.Models.RentalModel", "Rental")
+                        .WithMany()
+                        .HasForeignKey("RentalId");
+
+                    b.HasOne("CarRental.Domain.Models.UserModel", "User")
+                        .WithMany("Payments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rental");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CarRental.Domain.Models.RentalModel", b =>
                 {
+                    b.HasOne("CarRental.Domain.Models.CarModel", "CarModel")
+                        .WithMany("Rentals")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarRental.Domain.Models.UserModel", "UserModel")
+                        .WithMany("Rentals")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("CarRental.Domain.Values.Location", "EndLocation", b1 =>
                         {
                             b1.Property<Guid>("RentalModelId")
@@ -212,6 +291,8 @@ namespace CarRental.Migrations
                                 .HasForeignKey("RentalModelId");
                         });
 
+                    b.Navigation("CarModel");
+
                     b.Navigation("EndLocation");
 
                     b.Navigation("Price")
@@ -219,6 +300,52 @@ namespace CarRental.Migrations
 
                     b.Navigation("StartLocation")
                         .IsRequired();
+
+                    b.Navigation("UserModel");
+                });
+
+            modelBuilder.Entity("CarRental.Domain.Models.UserModel", b =>
+                {
+                    b.OwnsOne("CarRental.Domain.Values.DriverLicense", "DriverLicense", b1 =>
+                        {
+                            b1.Property<Guid>("UserModelId")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<DateTime>("ExpirationDate")
+                                .HasColumnType("TEXT")
+                                .HasColumnName("DriverLicenseExpirationDate");
+
+                            b1.Property<DateTime>("IssuedDate")
+                                .HasColumnType("TEXT")
+                                .HasColumnName("DriverLicenseIssuedDate");
+
+                            b1.Property<string>("Number")
+                                .IsRequired()
+                                .HasColumnType("TEXT")
+                                .HasColumnName("DriverLicenseNumber");
+
+                            b1.HasKey("UserModelId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserModelId");
+                        });
+
+                    b.Navigation("DriverLicense")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CarRental.Domain.Models.CarModel", b =>
+                {
+                    b.Navigation("Rentals");
+                });
+
+            modelBuilder.Entity("CarRental.Domain.Models.UserModel", b =>
+                {
+                    b.Navigation("Payments");
+
+                    b.Navigation("Rentals");
                 });
 #pragma warning restore 612, 618
         }

@@ -10,17 +10,10 @@ public class PaymentModelConfiguration : IEntityTypeConfiguration<PaymentModel>
     {
         builder.HasKey(p => p.Id);
 
+        builder.Property(p => p.RentalId);
         builder.Property(p => p.Amount).HasColumnType("decimal(18,2)");
         builder.Property(p => p.Type).HasConversion<string>();
         builder.Property(p => p.Status).HasConversion<string>();
         builder.Property(p => p.Timestamp);
-
-        builder.HasOne(p => p.User)
-            .WithMany(u => u.Payments)
-            .HasForeignKey(p => p.UserId);
-
-        builder.HasOne(p => p.Rental)
-            .WithMany()
-            .HasForeignKey(p => p.RentalId);
     }
 }

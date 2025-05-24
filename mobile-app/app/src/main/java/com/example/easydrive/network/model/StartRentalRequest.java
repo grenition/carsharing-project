@@ -4,18 +4,21 @@ import com.google.gson.annotations.SerializedName;
 import java.util.UUID;
 
 public class StartRentalRequest {
-    @SerializedName("userId")
-    private UUID userId;
-    
     @SerializedName("carId")
     private UUID carId;
     
     @SerializedName("startLocation")
     private Location startLocation;
 
+    public StartRentalRequest() {
+    }
+
+    public StartRentalRequest(UUID carId, Location startLocation) {
+        this.carId = carId;
+        this.startLocation = startLocation;
+    }
+
     // Getters and setters
-    public UUID getUserId() { return userId; }
-    public void setUserId(UUID userId) { this.userId = userId; }
     public UUID getCarId() { return carId; }
     public void setCarId(UUID carId) { this.carId = carId; }
     public Location getStartLocation() { return startLocation; }

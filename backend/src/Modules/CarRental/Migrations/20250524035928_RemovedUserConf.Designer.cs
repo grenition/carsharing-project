@@ -3,6 +3,7 @@ using System;
 using CarRental.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRental.Migrations
 {
     [DbContext(typeof(CarRentalDbContext))]
-    partial class CarRentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250524035928_RemovedUserConf")]
+    partial class RemovedUserConf
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
@@ -88,6 +91,8 @@ namespace CarRental.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RentalId");
+
                     b.ToTable("Payments");
                 });
 
@@ -111,6 +116,8 @@ namespace CarRental.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CarId");
 
                     b.ToTable("Rentals");
                 });
@@ -144,8 +151,23 @@ namespace CarRental.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("CarRental.Domain.Models.PaymentModel", b =>
+                {
+                    b.HasOne("CarRental.Domain.Models.RentalModel", "Rental")
+                        .WithMany()
+                        .HasForeignKey("RentalId");
+
+                    b.Navigation("Rental");
+                });
+
             modelBuilder.Entity("CarRental.Domain.Models.RentalModel", b =>
                 {
+                    b.HasOne("CarRental.Domain.Models.CarModel", "CarModel")
+                        .WithMany("Rentals")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("CarRental.Domain.Values.Location", "EndLocation", b1 =>
                         {
                             b1.Property<Guid>("RentalModelId")
@@ -212,6 +234,8 @@ namespace CarRental.Migrations
                                 .HasForeignKey("RentalModelId");
                         });
 
+                    b.Navigation("CarModel");
+
                     b.Navigation("EndLocation");
 
                     b.Navigation("Price")
@@ -219,6 +243,11 @@ namespace CarRental.Migrations
 
                     b.Navigation("StartLocation")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CarRental.Domain.Models.CarModel", b =>
+                {
+                    b.Navigation("Rentals");
                 });
 #pragma warning restore 612, 618
         }

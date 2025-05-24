@@ -3,6 +3,7 @@ using System;
 using CarRental.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRental.Migrations
 {
     [DbContext(typeof(CarRentalDbContext))]
-    partial class CarRentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250524041057_RemovedForeignKey")]
+    partial class RemovedForeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
@@ -88,6 +91,8 @@ namespace CarRental.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RentalId");
+
                     b.ToTable("Payments");
                 });
 
@@ -98,6 +103,9 @@ namespace CarRental.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("CarId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("CarModelId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("EndTime")
@@ -111,6 +119,8 @@ namespace CarRental.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CarModelId");
 
                     b.ToTable("Rentals");
                 });
@@ -144,8 +154,23 @@ namespace CarRental.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("CarRental.Domain.Models.PaymentModel", b =>
+                {
+                    b.HasOne("CarRental.Domain.Models.RentalModel", "Rental")
+                        .WithMany()
+                        .HasForeignKey("RentalId");
+
+                    b.Navigation("Rental");
+                });
+
             modelBuilder.Entity("CarRental.Domain.Models.RentalModel", b =>
                 {
+                    b.HasOne("CarRental.Domain.Models.CarModel", "CarModel")
+                        .WithMany()
+                        .HasForeignKey("CarModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("CarRental.Domain.Values.Location", "EndLocation", b1 =>
                         {
                             b1.Property<Guid>("RentalModelId")
@@ -211,6 +236,8 @@ namespace CarRental.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("RentalModelId");
                         });
+
+                    b.Navigation("CarModel");
 
                     b.Navigation("EndLocation");
 

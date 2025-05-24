@@ -98,29 +98,39 @@ public class RentFragment extends DialogFragment {
             buttonConfirm.setText("Processing...");
             
             // Create rental request
-            StartRentalRequest request = new StartRentalRequest();
-            request.setCarId(car.getId());
-            // TODO: Get actual user ID from your auth system
-            request.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000000"));
-            
-            // Use car's current location as start location
             Location startLocation = new Location();
             startLocation.setLatitude(car.getLocation().getLatitude());
             startLocation.setLongitude(car.getLocation().getLongitude());
-            request.setStartLocation(startLocation);
+            startLocation.setAddress(car.getLocation().getAddress());
+            
+            StartRentalRequest request = new StartRentalRequest(car.getId(), startLocation);
 
             // Call API to start rental
             apiService.startRental(request).enqueue(new Callback<RentalModel>() {
                 @Override
                 public void onResponse(@NonNull Call<RentalModel> call, @NonNull Response<RentalModel> response) {
                     if (response.isSuccessful() && response.body() != null) {
-                        Toast.makeText(getContext(), "Car rented successfully!", Toast.LENGTH_SHORT).show();
+                        RentalModel rental = response.body();
+                        String successMessage = String.format("Car rented successfully! Rental ID: %s", rental.getId());
+                        Toast.makeText(getContext(), successMessage, Toast.LENGTH_SHORT).show();
                         if (listener != null) {
                             listener.onRentConfirmed(car);
                         }
                         dismiss();
                     } else {
-                        Toast.makeText(getContext(), "Failed to rent car. Please try again.", Toast.LENGTH_SHORT).show();
+                        String errorMessage = "Failed to rent car. ";
+                        if (response.code() == 401) {
+                            errorMessage += "Please login again.";
+                        } else if (response.code() == 403) {
+                            errorMessage += "Insufficient balance or invalid driver's license.";
+                        } else if (response.code() == 404) {
+                            errorMessage += "Car not found.";
+                        } else if (response.code() == 409) {
+                            errorMessage += "Car is already rented.";
+                        } else {
+                            errorMessage += "Please try again.";
+                        }
+                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                         buttonConfirm.setEnabled(true);
                         buttonConfirm.setText("Confirm");
                     }
@@ -128,7 +138,8 @@ public class RentFragment extends DialogFragment {
 
                 @Override
                 public void onFailure(@NonNull Call<RentalModel> call, @NonNull Throwable t) {
-                    Toast.makeText(getContext(), "Network error. Please try again.", Toast.LENGTH_SHORT).show();
+                    String errorMessage = "Network error: " + t.getMessage();
+                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                     buttonConfirm.setEnabled(true);
                     buttonConfirm.setText("Confirm");
                 }

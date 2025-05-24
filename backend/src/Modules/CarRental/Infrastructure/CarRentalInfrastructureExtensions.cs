@@ -17,7 +17,6 @@ public static class CarRentalInfrastructureExtensions
 
         services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
-        services.AddScoped<UserModelRepository>();
         services.AddScoped<CarModelRepository>();
         services.AddScoped<RentalModelRepository>();
         services.AddScoped<PaymentModelRepository>();
