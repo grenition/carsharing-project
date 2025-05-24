@@ -9,12 +9,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.easydrive.R;
-import com.example.easydrive.network.ApiService;
 import com.example.easydrive.databinding.FragmentLoginBinding;
+import com.example.easydrive.network.ApiService;
 import com.example.easydrive.network.model.LoginResponse;
 import com.example.easydrive.network.model.UserAuthRequest;
 import com.example.easydrive.utils.TokenManager;

@@ -1,20 +1,20 @@
 package com.example.easydrive.di;
 
 import android.content.Context;
+
 import com.example.easydrive.network.ApiConfig;
 import com.example.easydrive.network.ApiService;
 import com.example.easydrive.utils.TokenManager;
+
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import javax.inject.Singleton;
+import dagger.hilt.components.SingletonComponent;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Interceptor;
-import okhttp3.Response;
-import java.io.IOException;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

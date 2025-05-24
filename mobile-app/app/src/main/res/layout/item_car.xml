@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/textViewCarModel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonRent"
+        tools:text="Model 3"
+        android:textSize="24sp"
+        android:textColor="@color/colorPrimaryBlue"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/textViewCarManufacturer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCarModel"
+        tools:text="Tesla"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"/>
+
+    <TextView
+        android:id="@+id/textViewLicensePlate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toEndOf="@+id/textViewCarManufacturer"
+        app:layout_constraintTop_toTopOf="@+id/textViewCarManufacturer"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewCarManufacturer"
+        tools:text="AA001AA"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"/>
+
+     <TextView
+        android:id="@+id/textViewCarYear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="@+id/textViewCarManufacturer"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCarManufacturer"
+        tools:text="Year: 2019"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"/>
+
+     <TextView
+        android:id="@+id/textViewFuelLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toEndOf="@+id/textViewCarYear"
+        app:layout_constraintTop_toTopOf="@+id/textViewCarYear"
+         app:layout_constraintBaseline_toBaselineOf="@+id/textViewCarYear"
+        tools:text="Fuel: 78.5%"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonRent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintVertical_bias="0.5"
+        tools:text="Rent for $25/day"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@color/colorPrimaryBlue"
+        app:cornerRadius="12dp"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="?android:attr/dividerVertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFuelLevel"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout> 

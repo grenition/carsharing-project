@@ -5,14 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.example.easydrive.R;
-import com.example.easydrive.network.ApiService;
+
 import com.example.easydrive.databinding.FragmentRegisterBinding;
+import com.example.easydrive.network.ApiService;
 import com.example.easydrive.network.model.UserRegisterRequest;
+
 import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 import retrofit2.Callback;
