@@ -63,9 +63,7 @@ public class MainPageFragment extends Fragment {
             rentalsFragment.show(getChildFragmentManager(), "rentals_dialog");
         });
 
-        // Set up rent confirmation listener
         carAdapter.setOnRentConfirmedListener(car -> {
-            // Refresh the car list after successful rental
             fetchCars();
         });
 

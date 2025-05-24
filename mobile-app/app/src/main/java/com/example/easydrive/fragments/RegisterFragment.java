@@ -68,10 +68,8 @@ public class RegisterFragment extends Fragment {
                             });
                         }
                     } else {
-                        // Handle registration error
                         if (getActivity() != null) {
                             getActivity().runOnUiThread(() -> {
-                                // Since the response body is Void on success, we can't get a specific error message from it on failure directly
                                 Toast.makeText(getContext(), "Registration failed. Please check details.", Toast.LENGTH_SHORT).show();
                             });
                         }
@@ -80,7 +78,6 @@ public class RegisterFragment extends Fragment {
 
                 @Override
                 public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                    // Handle network errors
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
                             Toast.makeText(getContext(), "Network Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
@@ -93,7 +90,6 @@ public class RegisterFragment extends Fragment {
 
     private void setupLoginButton() {
         binding.loginButton.setOnClickListener(v -> {
-            // Navigate back to login fragment
             if (getActivity() != null) {
                 getActivity().getSupportFragmentManager().popBackStack();
             }

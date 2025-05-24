@@ -63,7 +63,6 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
-                        // Handle successful login
                         String token = response.body().getToken();
                         tokenManager.saveToken(token);
 
@@ -78,10 +77,8 @@ public class LoginFragment extends Fragment {
                             });
                          }
                     } else {
-                        // Handle login error
                          if (getActivity() != null) {
                             getActivity().runOnUiThread(() -> {
-                                // Since the response body is Void on success, we can't get a specific error message from it on failure directly
                                  Toast.makeText(getContext(), "Login failed. Please check credentials.", Toast.LENGTH_SHORT).show();
                             });
                          }
@@ -90,7 +87,6 @@ public class LoginFragment extends Fragment {
 
                 @Override
                 public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
-                    // Handle network errors
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
                              Toast.makeText(getContext(), "Network Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();

@@ -26,8 +26,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.util.UUID;
-
 @AndroidEntryPoint
 public class RentFragment extends DialogFragment {
     private static final String ARG_CAR = "car";
@@ -77,7 +75,6 @@ public class RentFragment extends DialogFragment {
         MaterialButton buttonCancel = view.findViewById(R.id.buttonCancel);
         MaterialButton buttonConfirm = view.findViewById(R.id.buttonConfirm);
 
-        // Set car details
         String carDetails = String.format("%s %s\nLicense Plate: %s\nYear: %d\nFuel Level: %.1f%%",
                 car.getManufacturer(),
                 car.getModel(),
@@ -86,18 +83,15 @@ public class RentFragment extends DialogFragment {
                 car.getFuelLevel());
         textViewCarDetails.setText(carDetails);
 
-        // Set price details
         String priceDetails = String.format("Price: $%.2f per day", car.getPricePerDay());
         textViewPriceDetails.setText(priceDetails);
 
-        // Set up button click listeners
         buttonCancel.setOnClickListener(v -> dismiss());
 
         buttonConfirm.setOnClickListener(v -> {
             buttonConfirm.setEnabled(false);
             buttonConfirm.setText("Processing...");
             
-            // Create rental request
             Location startLocation = new Location();
             startLocation.setLatitude(car.getLocation().getLatitude());
             startLocation.setLongitude(car.getLocation().getLongitude());
@@ -105,7 +99,6 @@ public class RentFragment extends DialogFragment {
             
             StartRentalRequest request = new StartRentalRequest(car.getId(), startLocation);
 
-            // Call API to start rental
             apiService.startRental(request).enqueue(new Callback<RentalModel>() {
                 @Override
                 public void onResponse(@NonNull Call<RentalModel> call, @NonNull Response<RentalModel> response) {

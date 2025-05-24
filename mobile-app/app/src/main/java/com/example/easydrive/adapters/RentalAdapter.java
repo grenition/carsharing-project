@@ -55,14 +55,12 @@ public class RentalAdapter extends RecyclerView.Adapter<RentalAdapter.RentalView
     public void setRentalList(List<RentalModel> rentalList) {
         Log.d(TAG, "setRentalList: Setting " + (rentalList != null ? rentalList.size() : 0) + " rentals");
         if (rentalList != null) {
-            // Sort rentals: active ones first, then by start time
             rentalList.sort((r1, r2) -> {
                 if (r1.getStatus() == RentalStatus.Active && r2.getStatus() != RentalStatus.Active) {
                     return -1;
                 } else if (r1.getStatus() != RentalStatus.Active && r2.getStatus() == RentalStatus.Active) {
                     return 1;
                 }
-                // If both are active or both are not active, sort by start time
                 try {
                     return inputFormat.parse(r2.getStartTime()).compareTo(inputFormat.parse(r1.getStartTime()));
                 } catch (ParseException e) {
@@ -117,14 +115,12 @@ public class RentalAdapter extends RecyclerView.Adapter<RentalAdapter.RentalView
             try {
                 Log.d(TAG, "bind: Starting to bind rental " + rental.getId());
                 
-                // Set background color based on status
                 if (rental.getStatus() == RentalStatus.Active) {
                     itemView.setBackgroundResource(R.color.active_rental_background);
                 } else {
                     itemView.setBackgroundResource(android.R.color.white);
                 }
                 
-                // Fetch detailed car information
                 if (rental.getCarId() != null) {
                     apiService.getCarById(rental.getCarId().toString()).enqueue(new Callback<CarModel>() {
                         @Override
@@ -156,7 +152,6 @@ public class RentalAdapter extends RecyclerView.Adapter<RentalAdapter.RentalView
                     textViewCarInfo.setText("Car information unavailable");
                 }
 
-                // Set rental period
                 if (rental.getStartTime() != null) {
                     try {
                         String startTime = dateFormat.format(inputFormat.parse(rental.getStartTime()));
@@ -174,11 +169,9 @@ public class RentalAdapter extends RecyclerView.Adapter<RentalAdapter.RentalView
                     textViewRentalPeriod.setText("");
                 }
 
-                // Set rental status
                 String statusText = "Status: " + getStatusText(rental.getStatus());
                 textViewRentalStatus.setText(statusText);
 
-                // Set rental price
                 if (rental.getPrice() != null) {
                     String priceInfo = String.format("Total Price: $%.2f", rental.getPrice().getAmount());
                     textViewRentalPrice.setText(priceInfo);
@@ -187,7 +180,6 @@ public class RentalAdapter extends RecyclerView.Adapter<RentalAdapter.RentalView
                     textViewRentalPrice.setText("Price information unavailable");
                 }
                 
-                // Show/Hide End Rental button based on status
                 if (rental.getStatus() == RentalStatus.Active) {
                     buttonEndRental.setVisibility(View.VISIBLE);
                     buttonEndRental.setOnClickListener(v -> showEndRentalConfirmation(rental.getId()));
@@ -217,12 +209,10 @@ public class RentalAdapter extends RecyclerView.Adapter<RentalAdapter.RentalView
         }
 
         private void endRental(UUID rentalId) {
-            // *** IMPORTANT: Replace with actual user location ***
             Location endLocation = new Location();
             endLocation.setLatitude(0.0);
             endLocation.setLongitude(0.0);
             endLocation.setAddress("Unknown Location");
-            // ***************************************************
 
             EndRentalRequest request = new EndRentalRequest();
             request.setRentalId(rentalId);

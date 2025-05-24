@@ -9,11 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
-
 import com.example.easydrive.R;
 import com.example.easydrive.fragments.RentFragment;
 import com.example.easydrive.network.model.CarModel;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 
@@ -77,9 +76,7 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
             textViewCarManufacturer.setText(car.getManufacturer());
             textViewLicensePlate.setText(car.getLicensePlate());
             textViewCarYear.setText("Year: " + car.getYear());
-            // Assuming fuel level is already a percentage value (e.g., 78.5 for 78.5%)
             textViewFuelLevel.setText("Fuel: " + String.format("%.1f%%", car.getFuelLevel()));
-            // Display the actual price per day
             buttonRent.setText(String.format("$%.2f/day", car.getPricePerDay()));
 
             buttonRent.setOnClickListener(v -> {

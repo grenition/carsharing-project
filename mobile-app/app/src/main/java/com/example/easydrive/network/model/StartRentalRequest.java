@@ -18,7 +18,6 @@ public class StartRentalRequest {
         this.startLocation = startLocation;
     }
 
-    // Getters and setters
     public UUID getCarId() { return carId; }
     public void setCarId(UUID carId) { this.carId = carId; }
     public Location getStartLocation() { return startLocation; }

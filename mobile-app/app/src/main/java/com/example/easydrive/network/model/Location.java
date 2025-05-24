@@ -4,8 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class Location implements Serializable {
-    private static final long serialVersionUID = 1L;
-    
     @SerializedName("latitude")
     private double latitude;
     
@@ -15,7 +13,6 @@ public class Location implements Serializable {
     @SerializedName("address")
     private String address;
 
-    // Getters and setters
     public double getLatitude() { return latitude; }
     public void setLatitude(double latitude) { this.latitude = latitude; }
     public double getLongitude() { return longitude; }

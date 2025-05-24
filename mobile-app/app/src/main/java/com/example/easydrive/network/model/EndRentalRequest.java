@@ -10,7 +10,6 @@ public class EndRentalRequest {
     @SerializedName("endLocation")
     private Location endLocation;
 
-    // Getters and setters
     public UUID getRentalId() { return rentalId; }
     public void setRentalId(UUID rentalId) { this.rentalId = rentalId; }
     public Location getEndLocation() { return endLocation; }

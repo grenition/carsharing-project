@@ -116,10 +116,8 @@ public class RentalsFragment extends DialogFragment implements RentalAdapter.OnR
 
     @Override
     public void onRentalEnded() {
-        // Refresh rentals list
         fetchRentals();
         
-        // Notify parent fragment to refresh car list
         if (getParentFragment() instanceof MainPageFragment) {
             ((MainPageFragment) getParentFragment()).refreshCarList();
         }
