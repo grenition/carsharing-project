@@ -7,5 +7,4 @@ import dagger.hilt.components.SingletonComponent;
 @Module
 @InstallIn(SingletonComponent.class)
 public class AppModule {
-    // Provide your dependencies here
-} 
+}

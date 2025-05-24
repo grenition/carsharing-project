@@ -42,29 +42,13 @@ public class LoginFragment extends Fragment {
 
     private void setupLoginButton() {
         binding.loginButton.setOnClickListener(v -> {
-            String email = binding.emailInput.getText().toString();
-            String password = binding.passwordInput.getText().toString();
-            
-            authApiService.login(email, password, new AuthApiService.AuthCallback() {
-                @Override
-                public void onSuccess(String token) {
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(() -> {
-                            Toast.makeText(getContext(), "Login successful!", Toast.LENGTH_SHORT).show();
-                            // TODO: Navigate to main screen or store token
-                        });
-                    }
-                }
-
-                @Override
-                public void onError(String error) {
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(() -> {
-                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
-                        });
-                    }
-                }
-            });
+            // Ignore login conditions for now, always navigate to main page
+            if (getActivity() != null) {
+                getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, new MainPageFragment())
+                    .commit();
+            }
         });
     }
 
