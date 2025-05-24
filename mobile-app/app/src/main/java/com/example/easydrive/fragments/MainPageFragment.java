@@ -17,8 +17,10 @@ import com.example.easydrive.adapters.CarAdapter;
 import com.example.easydrive.databinding.FragmentMainPageBinding;
 import com.example.easydrive.network.ApiService;
 import com.example.easydrive.network.model.CarModel;
+import com.example.easydrive.network.model.CarStatus;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -66,21 +68,24 @@ public class MainPageFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<List<CarModel>> call, @NonNull Response<List<CarModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<CarModel> cars = response.body();
-                    carAdapter.setCarList(cars); // Update the adapter with data
-                    Log.d("MainPageFragment", "Fetched " + cars.size() + " cars");
-                     Toast.makeText(getContext(), "Cars fetched successfully!", Toast.LENGTH_SHORT).show();
-
+                    List<CarModel> cars = response.body().stream()
+                            .filter(car -> car.getStatus() == CarStatus.Available)
+                            .collect(Collectors.toList());
+                    carAdapter.setCarList(cars);
+                    Log.d("MainPageFragment", "Fetched " + cars.size() + " available cars");
+                    if (cars.isEmpty()) {
+                        Toast.makeText(getContext(), "No available cars at the moment.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Log.e("MainPageFragment", "Failed to fetch cars: " + response.code());
-                     Toast.makeText(getContext(), "Failed to fetch cars.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Failed to fetch cars.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<CarModel>> call, @NonNull Throwable t) {
                 Log.e("MainPageFragment", "Error fetching cars: " + t.getMessage());
-                 Toast.makeText(getContext(), "Network error fetching cars.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Network error fetching cars.", Toast.LENGTH_SHORT).show();
             }
         });
     }
